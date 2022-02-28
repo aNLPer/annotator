@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="shu.sag.anno.dao.UserMapper">
+    <!--这里使用user能代替shu.sag.anno.pojo.User的原因是我们在mybatis.xml文件中为类起了别名-->
+
+    <select id="login" resultType="user">
+        select * from user where account=#{account} and password=#{password}
+    </select>
+
+    <select id="getCurrentAnnoData" resultType="map">
+        select id,text from ${tableName} limit ${currentIndex},1
+    </select>
+
+    <insert id="addAnnoResult" parameterType="AnnoResult">
+        insert into ${resultTableName} (userAccount,textID,text, label,datasetTableName) values(#{userAccount},${textID},#{text},#{label},#{datasetTableName})
+    </insert>
+
+</mapper>

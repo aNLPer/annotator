@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="shu.sag.anno.dao.TaskMapper">
+
+    <insert id="addTask" parameterType="Task">
+        insert into task (taskName,tableName,configID,taskStatus,startIndex,endIndex,resultTableName) values(#{taskName},#{tableName},#{configID},#{taskStatus},#{startIndex},#{endIndex},#{resultTableName})
+    </insert>
+
+    <update id="createResultTable" parameterType="String">
+        create table if not exists ${resultTableName} (
+            id INT(11) NOT NULL AUTO_INCREMENT,
+            userID INT(11) NOT NULL COMMENT'用户id',
+            textID INT(11) NOT NULL COMMENT'数据id',
+            text mediumtext NOT NULL COMMENT'标注数据',
+            label text NOT NULL COMMENT'标注',
+            datasetTableName varchar(255) NOT NULL COMMENT'标注数据表',
+            PRIMARY KEY (id)
+        )ENGINE=INNODB DEFAULT CHARSET = utf8mb4;
+    </update>
+
+    <delete id="deleteTaskByID" parameterType="int">
+        delete from task where id = #{id}
+    </delete>
+
+    <update id="updateTask" parameterType="task">
+        update task
+        set taskName=#{taskName},tableName=#{tableName},configID=#{configID},taskStatus=#{taskStatus},startIndex=#{startIndex},endIndex=#{endIndex}, resultTableName=#{resultTableName}
+        where id = #{id}
+    </update>
+
+    <select id="getAllTask" resultType="Task">
+        select * from task limit #{currentIndex}, #{pageSize}
+    </select>
+
+    <select id="getTaskByConfigID" parameterType="int" resultType="Task">
+        select * from task where configID = #{configID}
+    </select>
+
+    <select id="getTaskByID" parameterType="int" resultType="Task">
+        select * from task where id = #{id}
+    </select>
+
+
+</mapper>

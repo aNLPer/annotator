@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="shu.sag.anno.dao.UserTaskMapper">
+
+    <insert id="addUserTask" parameterType="UserTask">
+        insert into usertask(userAccount,taskID,taskName,currentIndex)
+        values(#{userAccount},#{taskID},#{taskName},#{currentIndex})
+    </insert>
+
+    <delete id="deleteUserTaskByID" parameterType="int">
+        delete from usertask where id = #{id}
+    </delete>
+
+    <update id="updateUserTaskCurrentAnnoIndex">
+        update usertask
+        set currentAnnoIndex=${currentAnnoIndex}
+        where id = ${userTaskID}
+    </update>
+
+    <select id="getUserTaskByUserAccount"  resultType="UserTask">
+        select * from usertask where userAccount=#{userAccount} limit #{currentIndex}, #{pageSize}
+    </select>
+
+</mapper>

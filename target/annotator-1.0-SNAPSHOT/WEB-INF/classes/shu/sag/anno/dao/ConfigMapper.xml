@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="shu.sag.anno.dao.ConfigMapper">
+
+    <insert id="addConfig" parameterType="Config">
+        insert into config (config, remark) values(#{config},#{remark})
+    </insert>
+
+    <delete id="deleteConfig" parameterType="int">
+        delete from config where id = #{id}
+    </delete>
+
+    <select id="getConfigByID" parameterType="int" resultType="Config">
+        select * from config where id = #{id}
+    </select>
+
+    <select id="getConfigByType" parameterType="String" resultType="Config">
+        select * from config where config like #{type}
+    </select>
+
+    <select id="getAllConfig" parameterType="int" resultType="Config">
+        select * from config limit #{currentIndex},#{pageSize}
+    </select>
+
+    <update id="updateConfig" parameterType="Config">
+        update config
+        set config = #{config}, remark=#{remark}
+        where id = #{id}
+    </update>
+
+
+
+</mapper>

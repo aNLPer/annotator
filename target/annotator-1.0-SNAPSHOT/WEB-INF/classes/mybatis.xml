@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <!--为项目中某包下的类起别名-->
+    <typeAliases>
+        <package name="shu.sag.anno.pojo"/>
+    </typeAliases>
+
+    <!--注册mapper文件-->
+    <mappers>
+        <mapper resource="shu/sag/anno/dao/ConfigMapper.xml"/>
+        <mapper resource="shu/sag/anno/dao/TaskMapper.xml"/>
+        <mapper resource="shu/sag/anno/dao/UserTaskMapper.xml"/>
+        <mapper resource="shu/sag/anno/dao/UserMapper.xml"/>
+    </mappers>
+</configuration>
