@@ -6,7 +6,7 @@
     <!--这里使用user能代替shu.sag.anno.pojo.User的原因是我们在mybatis.xml文件中为类起了别名-->
 
     <select id="login" resultType="user">
-        select * from user where account=#{account} and password=#{password}
+        select * from user where username=#{username} and password=#{password}
     </select>
 
     <select id="getCurrentAnnoData" resultType="map">

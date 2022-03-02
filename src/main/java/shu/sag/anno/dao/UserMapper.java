@@ -9,7 +9,7 @@ import java.util.Map;
 
 public interface UserMapper {
     // 用户登录
-    User login(@Param("account") String account, @Param("password") String password);
+    User login(@Param("username") String username, @Param("password") String password);
     //返回当前标注数据
     Map<String,Object> getCurrentAnnoData(@Param("tableName") String tableName, @Param("currentIndex") int currentIndex);
     // 添加标注结果

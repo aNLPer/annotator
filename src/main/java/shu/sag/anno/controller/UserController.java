@@ -3,33 +3,39 @@ package shu.sag.anno.controller;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import shu.sag.anno.pojo.Anno;
 import shu.sag.anno.pojo.AnnoResult;
 import shu.sag.anno.pojo.User;
 import shu.sag.anno.pojo.UserTask;
 import shu.sag.anno.service.UserService;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.List;
-
+import shu.sag.anno.utils.TokenUtil;
+import com.alibaba.fastjson.JSONObject;
 
 @Controller
 public class UserController {
     @Autowired
     private UserService userService;
 
-    @RequestMapping("user/login")
-    public String login(String userAccount, String password, HttpSession httpSession, HttpServletResponse response){
-        User user = userService.login(userAccount, password);
+    @RequestMapping(value = "user/login", method = RequestMethod.POST)
+    @ResponseBody
+    public Object login(String username, String password){
+        JSONObject state = new JSONObject();
+        state.put("data",new JSONObject());
+        User user = userService.login(username, password);
         if(user==null){
-            response.setStatus(404);
-
-            return "loginFailed";
+            state.put("code",1);
+            state.put("message","用户不存在或者密码错误！");
+            return state;
         }else{
-            httpSession.setAttribute("user",user);
-            return "forward:getMyTask?userAccount="+user.getAccount()+"&currentIndex="+0+"&pageSize="+5;
+            //登录成功返回token
+            state.put("code",0);
+            state.put("message","登录成功！");
+            state.getJSONObject("data").put("token", TokenUtil.sign(user.getUsername(),user.getPassword()));
+            return state;
         }
     }
 
@@ -46,11 +52,15 @@ public class UserController {
 
     // 获取用户相关任务
     @RequestMapping("user/task/list")
-    public ModelAndView getMyTask(String userAccount,int currentIndex, int pageSize){
-        ModelAndView mav = new ModelAndView("myTaskList");
-        List<UserTask> myTaskList = userService.getUserTaskByUserAccount(userAccount, currentIndex,pageSize);
-        mav.addObject("myTaskList", myTaskList);
-        return mav;
+    @ResponseBody
+    public Object getMyTask(String token,int currentIndex, int pageSize){
+        JSONObject TaskList = new JSONObject();
+        TaskList.put("data", new JSONObject());
+        TaskList.getJSONObject("data").put("token",token);
+        //获取
+        List<UserTask> myTaskList = userService.getUserTaskByUserAccount( token,currentIndex,pageSize);
+
+        return null;
     }
 
     @RequestMapping("user/anno/start")

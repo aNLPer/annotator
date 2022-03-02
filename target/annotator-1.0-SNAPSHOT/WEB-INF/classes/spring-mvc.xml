@@ -17,7 +17,9 @@
     <!--使用注解的方式处理请求-->
     <mvc:annotation-driven/>
 
-
+    <mvc:interceptors>
+        <bean class="shu.sag.anno.interceptor.LoginInterceptor"></bean>
+    </mvc:interceptors>
     <!--视图解析-->
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver" id="internalResourceViewResolver">
         <!--前缀-->

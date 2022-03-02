@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface UserService {
     // 用户登录
-    User login(String account, String password);
+    User login(String username, String password);
 
     // 获取Anno对象
     public Anno getAnno(int userTaskID, int currentIndex, int taskID);
