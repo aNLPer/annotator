@@ -11,7 +11,7 @@ public class AnnoResult {
     private String datasetTableName;
     private String resultTableName;
     private int textID;
-    private String userAccount;
+    private String username;
     private String text;
     private String label;
 }

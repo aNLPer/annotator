@@ -14,12 +14,14 @@ import javax.servlet.http.HttpSession;
 import java.util.List;
 import shu.sag.anno.utils.TokenUtil;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.JSON;
 
 @Controller
 public class UserController {
     @Autowired
     private UserService userService;
 
+    // 登录
     @RequestMapping(value = "user/login", method = RequestMethod.POST)
     @ResponseBody
     public Object login(String username, String password){
@@ -39,39 +41,51 @@ public class UserController {
         }
     }
 
-    @RequestMapping("user/logout")
-    public String logout(HttpSession httpSession){
-        //删除session登录信息
-        httpSession.removeAttribute("user");
-        User u = (User)httpSession.getAttribute("user");
-        if(u == null){
-            System.out.println("删除登录信息");
-        }
-        return "redirect:/index.jsp";
-    }
 
-    // 获取用户相关任务
+    // 获取用户标注任务列表
     @RequestMapping("user/task/list")
     @ResponseBody
-    public Object getMyTask(String token,int currentIndex, int pageSize){
-        JSONObject TaskList = new JSONObject();
-        TaskList.put("data", new JSONObject());
-        TaskList.getJSONObject("data").put("token",token);
-        //获取
-        List<UserTask> myTaskList = userService.getUserTaskByUserAccount( token,currentIndex,pageSize);
-
-        return null;
+    public Object getMyTask(@RequestHeader("token") String token, int currentIndex, int pageSize){
+        JSONObject res = new JSONObject();
+        String verifyRes = TokenUtil.verify(token);
+        if (verifyRes.equals("-1")){
+            res.put("code","450");
+            res.put("message","登录信息失效，请重新登录！");
+            res.put("data",new JSONObject());
+            return res;
+        }else{
+            JSONObject loginUser = JSON.parseObject(verifyRes);
+            String username = loginUser.getString("username");
+            //获取任务列表
+            List<UserTask> myTaskList = userService.getUserTaskByUserAccount(username,currentIndex,pageSize);
+            int taskTotal = userService.getUserTaskNum(username);
+            res.put("code",0);
+            if (taskTotal==0){
+                res.put("message","暂无标注任务");
+            }else{
+                res.put("message","查找到"+taskTotal+"条标注任务");
+            }
+            res.put("data",new JSONObject());
+            res.getJSONObject("data").put("taskList",myTaskList);
+            res.getJSONObject("data").put("taskTotal",taskTotal);
+            return res;
+        }
     }
 
-    @RequestMapping("user/anno/start")
-    public ModelAndView startAnno(int userTaskID, int currentIndex, int taskID){
+    // 执行标注任务
+    @RequestMapping("user/anno/do")
+    @ResponseBody
+    public ModelAndView doAnno(int userTaskID, int currentIndex, int taskID){
+        /**/
+
         ModelAndView mav = new ModelAndView("anno");
         Anno anno = userService.startAnno(userTaskID, currentIndex, taskID);
         mav.addObject("anno", anno);
         return mav;
     }
 
-    @RequestMapping("submitAnnoResult")
+    // 提交标注结果
+    @RequestMapping("user/anno/submit")
     public ModelAndView submitAnnoResult(AnnoResult annoResult, @Param("userTaskID") int userTaskID,
                                          @Param("currentAnnoIndex")int currentAnnoIndex,
                                          @Param("taskID")int taskID){

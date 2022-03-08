@@ -20,7 +20,7 @@ public class TokenUtil {
      * @param **pwd**
      * @return
      */
-    public static String sign(String account, String pwd) {
+    public static String sign(String username, String pwd) {
         try {
             // 设置过期时间
             Date date = new Date(System.currentTimeMillis() + EXPIRE_TIME);
@@ -33,7 +33,7 @@ public class TokenUtil {
             // 添加header——>设置payload——>过期时间——>签名并返回token字符串
             return JWT.create()
                     .withHeader(header)
-                    .withClaim("account", account)
+                    .withClaim("username", username)
                     .withClaim("pwd", pwd)
                     .withExpiresAt(date)
                     .sign(algorithm);
@@ -54,8 +54,8 @@ public class TokenUtil {
             Algorithm algorithm = Algorithm.HMAC256(TOKEN_SECRET);
             JWTVerifier verifier = JWT.require(algorithm).build();
             DecodedJWT jwt = verifier.verify(token);
-            UJson.put("account",jwt.getClaim("account").asString());
-            UJson.put("pwd",jwt.getClaim("account").asString());
+            UJson.put("username",jwt.getClaim("username").asString());
+            UJson.put("pwd",jwt.getClaim("pwd").asString());
             return UJson.toJSONString();
         } catch (Exception e){
             return "-1";

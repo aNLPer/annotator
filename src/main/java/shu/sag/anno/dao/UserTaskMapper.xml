@@ -20,7 +20,11 @@
     </update>
 
     <select id="getUserTaskByUserAccount"  resultType="UserTask">
-        select * from usertask where userAccount=#{userAccount} limit #{currentIndex}, #{pageSize}
+        select * from usertask where username=#{username} limit #{currentIndex}, #{pageSize}
+    </select>
+
+    <select id="getUserTaskNum" resultType="int" parameterType="String">
+        select count(*) from usertask where username=#{username}
     </select>
 
 </mapper>

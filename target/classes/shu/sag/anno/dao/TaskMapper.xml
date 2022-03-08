@@ -42,5 +42,7 @@
         select * from task where id = #{id}
     </select>
 
-
+    <select id="getTotalNum" parameterType="int" resultType="int">
+        select endAnnoIndex-startAnnoIndex from task where id=#{id}
+    </select>
 </mapper>

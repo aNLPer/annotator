@@ -9,8 +9,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UserTask {
     private int id;
-    private String userAccount;
+    private String username;
     private int taskID;
     private String taskName;
     private int currentAnnoIndex;
+    private int allAnnoNumber;
 }

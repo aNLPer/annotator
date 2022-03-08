@@ -22,4 +22,6 @@ public interface TaskMapper {
     List<Task> getAllTask(int currentIndex, int pageSize);
     // 更新任务
     int updateTask(Task task);
+
+    int getTotalNum(int id);
 }

@@ -21,5 +21,8 @@ public interface UserService {
     Anno startAnno(int userTaskID, int currentIndex, int taskID);
 
     //用户获取自己的任务
-    List<UserTask> getUserTaskByUserAccount(String userAccount, int currentIndex, int pageSize);
+    List<UserTask> getUserTaskByUserAccount(String username, int currentIndex, int pageSize);
+
+    //获取用户标注任务数目
+    int getUserTaskNum(String username);
 }

@@ -1,5 +1,6 @@
 package shu.sag.anno.service;
 
+import com.alibaba.fastjson.JSONObject;
 import org.omg.Messaging.SYNC_WITH_TRANSPORT;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -68,7 +69,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserTask> getUserTaskByUserAccount(String userAccount, int currentIndex, int pageSize) {
-        return userTaskMapper.getUserTaskByUserAccount(userAccount,currentIndex, pageSize);
+    public List<UserTask> getUserTaskByUserAccount(String username, int currentIndex, int pageSize) {
+        // 查询返回结果数据
+        List<UserTask> taskList = userTaskMapper.getUserTaskByUserAccount(username,currentIndex, pageSize);
+        for(UserTask ut: taskList){
+            //获取标注任务样本总数
+            int totalNum = taskMapper.getTotalNum(ut.getTaskID());
+            ut.setAllAnnoNumber(totalNum);
+        }
+        return taskList;
+    }
+
+    @Override
+    public int getUserTaskNum(String username){
+        return userTaskMapper.getUserTaskNum(username);
     }
 }
