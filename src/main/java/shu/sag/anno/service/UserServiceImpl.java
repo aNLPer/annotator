@@ -1,16 +1,10 @@
 package shu.sag.anno.service;
-
-import com.alibaba.fastjson.JSONObject;
-import org.omg.Messaging.SYNC_WITH_TRANSPORT;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import shu.sag.anno.dao.TaskMapper;
-import shu.sag.anno.dao.UserMapper;
-import shu.sag.anno.dao.UserTaskMapper;
+import shu.sag.anno.dao.*;
 import shu.sag.anno.pojo.*;
-
 import java.util.List;
-import java.util.Map;
+
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -24,6 +18,11 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserTaskMapper userTaskMapper;
 
+    @Autowired
+    private DatasetMapper datasetMapper;
+
+    @Autowired
+    private ConfigMapper configMapper;
 
     @Override
     public User login(String username, String password) {
@@ -31,57 +30,74 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Anno getAnno(int userTaskID, int currentIndex, int taskID){
-        //获取Task对象
-        Task task = taskMapper.getTaskByID(taskID);
-        String datasetTableName = task.getDatasetTableName();
-
+    public Anno getAnno(int currentIndex, Task task){
+        /*
+        * 获取标注页面需要的数据
+        * */
         Anno anno = new Anno();
-        //设置任务id
-        anno.setTaskID(taskID);
-        //设置用户任务id
-        anno.setUserTaskID(userTaskID);
-        //当前的标注索引,
-        anno.setCurrentAnnoIndex(currentIndex);
-        //设置标注数据集表，
-        anno.setDatasetTableName(datasetTableName);
-        //设置结果数据集表，
+        // 原始未标注数据库表id
+        anno.setId(currentIndex);
+        // 原始未标注数据库文本
+        String datasetTableName = task.getDatasetTableName();
+        int id = currentIndex;
+        String fieldName = "text";
+        String text = datasetMapper.getTextFieldFromDataset(datasetTableName,id,fieldName);
+        anno.setText(text);
+        //标注结果表
         anno.setResultTableName(task.getResultTableName());
-        //当前标注内容
-        Map<String, Object> data = userMapper.getCurrentAnnoData(datasetTableName,currentIndex);
-        anno.setCurrentText((String) data.get("text"));
-        // 当前内容id
-        Number num = (Number) data.get("id");
-        anno.setTextID(num.intValue());
+        //原始未标注数据库表名
+        anno.setRawTableName(task.getDatasetTableName());
+        // 获取标注任务配置项
+        id = task.getConfigID();
+        Config cfg = configMapper.getConfigByID(id);
+        anno.setConfig(cfg.getConfig());
+        //返回
         return anno;
     }
 
     @Override
-    public Anno startAnno(int userTaskID, int currentIndex, int taskID) {
-        return this.getAnno(userTaskID, currentIndex, taskID);
-    }
-
-    @Override
-    public int addAnnoResult(AnnoResult annoResult, int userTaskID, int currentAnnoIndex) {
-        //修改userTask当前标注index
-        userTaskMapper.updateUserTaskCurrentAnnoIndex(userTaskID, currentAnnoIndex);
-        return userMapper.addAnnoResult(annoResult);
+    public boolean addAnnoResult(int userTaskID,
+                             String resultTableName,
+                             String username,
+                             int textID,
+                             String text,
+                             String label,
+                             String rawTableName){
+        // 插入标注将结果
+        int result1 = datasetMapper.addAnnoResult(resultTableName,username,textID,text,label,rawTableName);
+        // 修改task表的taskstatus字段
+        //taskMapper.updateTaskStatus(taskID, 2);
+        // 修改userTask当前标注index
+        int result2 = userTaskMapper.currentAnnoIndexAdd1(userTaskID);
+        return true;
     }
 
     @Override
     public List<UserTask> getUserTaskByUserAccount(String username, int currentIndex, int pageSize) {
         // 查询返回结果数据
         List<UserTask> taskList = userTaskMapper.getUserTaskByUserAccount(username,currentIndex, pageSize);
-        for(UserTask ut: taskList){
-            //获取标注任务样本总数
-            int totalNum = taskMapper.getTotalNum(ut.getTaskID());
-            ut.setAllAnnoNumber(totalNum);
-        }
         return taskList;
     }
 
     @Override
     public int getUserTaskNum(String username){
         return userTaskMapper.getUserTaskNum(username);
+    }
+
+    @Override
+    public UserTask getUserTaskByID(int id, String username){
+        return userTaskMapper.getUserTaskByID(id,username);
+    }
+
+    @Override
+    public Task getTaskByID(int id){
+        return taskMapper.getTaskByID(id);
+    }
+
+    @Override
+    public String getTextByID(String datasetTableName, int id){
+        System.out.println(datasetTableName+"__"+id);
+        String fieldName = "text";
+        return datasetMapper.getTextFieldFromDataset(datasetTableName, id, fieldName);
     }
 }

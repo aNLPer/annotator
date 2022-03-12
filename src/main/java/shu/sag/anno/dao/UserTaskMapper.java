@@ -17,4 +17,8 @@ public interface UserTaskMapper {
     int updateUserTaskCurrentAnnoIndex(@Param("userTaskID") int userTaskID, @Param("currentAnnoIndex") int currentAnnoIndex);
     // 获取用户标注任务总数
     int getUserTaskNum(String username);
+
+    int currentAnnoIndexAdd1(@Param("userTaskID") int userTaskID);
+
+    UserTask getUserTaskByID(@Param("id") int id, @Param("username") String username);
 }

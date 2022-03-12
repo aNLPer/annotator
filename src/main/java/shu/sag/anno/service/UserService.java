@@ -1,9 +1,6 @@
 package shu.sag.anno.service;
 
-import shu.sag.anno.pojo.Anno;
-import shu.sag.anno.pojo.AnnoResult;
-import shu.sag.anno.pojo.User;
-import shu.sag.anno.pojo.UserTask;
+import shu.sag.anno.pojo.*;
 
 import java.util.List;
 
@@ -12,17 +9,29 @@ public interface UserService {
     User login(String username, String password);
 
     // 获取Anno对象
-    public Anno getAnno(int userTaskID, int currentIndex, int taskID);
+    public Anno getAnno(int currentIndex, Task task);
 
     //提交标注结果返回下一条标注数据
-    int addAnnoResult(AnnoResult annoResult, int userTaskID, int currentAnnoIndex);
-
-    //用户开始标注
-    Anno startAnno(int userTaskID, int currentIndex, int taskID);
+    boolean addAnnoResult(int userTaskID,
+                      String resultTableName,
+                      String username,
+                      int textID,
+                      String text,
+                      String label,
+                      String rawTableName);
 
     //用户获取自己的任务
     List<UserTask> getUserTaskByUserAccount(String username, int currentIndex, int pageSize);
 
+    //用户获取usertask
+    UserTask getUserTaskByID(int id, String username);
+
     //获取用户标注任务数目
     int getUserTaskNum(String username);
+
+    //获取Task
+    Task getTaskByID(int id);
+
+    //获取文本标注
+    String getTextByID(String datasetTableName, int id);
 }

@@ -23,5 +23,8 @@ public interface TaskMapper {
     // 更新任务
     int updateTask(Task task);
 
+    //更新任务状态
+    int updateTaskStatus(int taskID, int status);
+
     int getTotalNum(int id);
 }

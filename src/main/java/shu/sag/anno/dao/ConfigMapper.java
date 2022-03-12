@@ -1,5 +1,6 @@
 package shu.sag.anno.dao;
 
+import org.apache.ibatis.annotations.Param;
 import shu.sag.anno.pojo.Config;
 
 import java.util.List;
@@ -10,7 +11,7 @@ public interface ConfigMapper {
     // 通过id删除任务配置
     int deleteConfig(int id);
     // 通过id获取任务配置
-    Config getConfigByID(int id);
+    Config getConfigByID(@Param("id") int id);
     // 通过标注类型获取任务配置
     Config getConfigByType(String type);
     // 分页获取任务配置

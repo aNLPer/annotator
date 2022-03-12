@@ -19,12 +19,22 @@
         where id = ${userTaskID}
     </update>
 
+    <update id="currentAnnoIndexAdd1" parameterType="int">
+        update usertask
+        set currentAnnoIndex=currentAnnoIndex+1
+        where id = #{userTaskID}
+    </update>
+
     <select id="getUserTaskByUserAccount"  resultType="UserTask">
         select * from usertask where username=#{username} limit #{currentIndex}, #{pageSize}
     </select>
 
     <select id="getUserTaskNum" resultType="int" parameterType="String">
         select count(*) from usertask where username=#{username}
+    </select>
+
+    <select id="getUserTaskByID" resultType="UserTask">
+        select * from usertask where username=#{username} and id=#{id}
     </select>
 
 </mapper>

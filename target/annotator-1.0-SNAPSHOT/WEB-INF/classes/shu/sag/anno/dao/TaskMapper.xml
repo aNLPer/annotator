@@ -5,7 +5,7 @@
 <mapper namespace="shu.sag.anno.dao.TaskMapper">
 
     <insert id="addTask" parameterType="Task">
-        insert into task (taskName,tableName,configID,taskStatus,startIndex,endIndex,resultTableName) values(#{taskName},#{tableName},#{configID},#{taskStatus},#{startIndex},#{endIndex},#{resultTableName})
+        insert into task (taskName,tableName,configID,taskStatus,resultTableName) values(#{taskName},#{tableName},#{configID},#{taskStatus},#{resultTableName})
     </insert>
 
     <update id="createResultTable" parameterType="String">
@@ -28,6 +28,12 @@
         update task
         set taskName=#{taskName},tableName=#{tableName},configID=#{configID},taskStatus=#{taskStatus},startIndex=#{startIndex},endIndex=#{endIndex}, resultTableName=#{resultTableName}
         where id = #{id}
+    </update>
+
+    <update id="updateTaskStatus">
+        update task
+        set taskStatus=#{status}
+        where id=#{taskID}
     </update>
 
     <select id="getAllTask" resultType="Task">

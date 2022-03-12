@@ -8,17 +8,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Anno {
-    private int taskID;
-
-    private int userTaskID;
-    //
-    private String datasetTableName;
-    //结果集
-    private String resultTableName;
-
-    private int currentAnnoIndex;
-    // 当前标注内容id
-    private int textID;
-    // 当前的标注内容
-    private String currentText;
+    private int id;//待标注数据id
+    private String text;//待标注文本
+    private String resultTableName;//标注结果表名字
+    private String rawTableName;//待标注数据表名字
+    private String config;//config表congfig字段
+    private String label;//若已标注则返回标注标签
 }

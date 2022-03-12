@@ -13,7 +13,5 @@ public class Task {
     private String datasetTableName;
     private int configID;
     private int taskStatus;
-    private int startAnnoIndex;
-    private int endAnnoIndex;
     private String resultTableName;
 }

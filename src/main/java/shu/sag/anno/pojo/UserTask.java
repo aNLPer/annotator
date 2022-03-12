@@ -13,5 +13,6 @@ public class UserTask {
     private int taskID;
     private String taskName;
     private int currentAnnoIndex;
-    private int allAnnoNumber;
+    private int startAnnoIndex;
+    private int endAnnoIndex;
 }

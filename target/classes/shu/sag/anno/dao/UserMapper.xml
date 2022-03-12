@@ -13,8 +13,5 @@
         select id,text from ${tableName} limit ${currentIndex},1
     </select>
 
-    <insert id="addAnnoResult" parameterType="AnnoResult">
-        insert into ${resultTableName} (userAccount,textID,text, label,datasetTableName) values(#{userAccount},${textID},#{text},#{label},#{datasetTableName})
-    </insert>
 
 </mapper>

@@ -11,7 +11,7 @@ import java.util.Map;
 public class TokenUtil {
 
     //过期时间5小时
-    private static final long EXPIRE_TIME = 5 * 60 * 60 * 1000;
+    private static final long EXPIRE_TIME = 24 * 60 * 60 * 1000;
     //私钥
     private static final String TOKEN_SECRET = "AnnoPrivateKey";
     /**
