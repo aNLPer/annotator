@@ -10,7 +10,7 @@ import java.util.Map;
 
 public class TokenUtil {
 
-    //过期时间5小时
+    //过期时间30天
     private static final long EXPIRE_TIME = 24 * 60 * 60 * 1000;
     //私钥
     private static final String TOKEN_SECRET = "AnnoPrivateKey";
@@ -20,7 +20,7 @@ public class TokenUtil {
      * @param **pwd**
      * @return
      */
-    public static String sign(String username, String pwd) {
+    public static String sign(String username, String pwd, String role) {
         try {
             // 设置过期时间
             Date date = new Date(System.currentTimeMillis() + EXPIRE_TIME);
@@ -35,6 +35,7 @@ public class TokenUtil {
                     .withHeader(header)
                     .withClaim("username", username)
                     .withClaim("pwd", pwd)
+                    .withClaim("role",role)
                     .withExpiresAt(date)
                     .sign(algorithm);
         } catch (Exception e) {
@@ -56,6 +57,7 @@ public class TokenUtil {
             DecodedJWT jwt = verifier.verify(token);
             UJson.put("username",jwt.getClaim("username").asString());
             UJson.put("pwd",jwt.getClaim("pwd").asString());
+            UJson.put("role",jwt.getClaim("role").asString());
             return UJson.toJSONString();
         } catch (Exception e){
             return "-1";

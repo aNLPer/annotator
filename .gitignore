@@ -8,7 +8,6 @@ __pycache__/
 
 # pycharm setting
 .idea/
-.idea
 
 # Distribution / packaging
 .Python

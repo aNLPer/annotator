@@ -1,5 +1,6 @@
 package shu.sag.anno.controller;
 
+import org.omg.Messaging.SYNC_WITH_TRANSPORT;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -30,7 +31,7 @@ public class UserController {
             //登录成功返回token
             state.put("code",0);
             state.put("message","登录成功！");
-            state.getJSONObject("data").put("token", TokenUtil.sign(user.getUsername(),user.getPassword()));
+            state.getJSONObject("data").put("token", TokenUtil.sign(user.getUsername(),user.getPassword(),user.getRole()));
             return state;
         }
     }
@@ -42,7 +43,7 @@ public class UserController {
         JSONObject res = new JSONObject();
         String verifyRes = TokenUtil.verify(token);
         if (verifyRes.equals("-1")){
-            res.put("code","450");
+            res.put("code","1");
             res.put("message","获取登录信息失效，请重新登录！");
             res.put("data",new JSONObject());
             return res;
@@ -140,7 +141,38 @@ public class UserController {
             String text = userService.getTextByID(rawTableName, id);
             System.out.println(text);
             userService.addAnnoResult(userTaskID,resultTableName,username,id,text,label,rawTableName);
+            res.put("code","0");
+            res.put("message","提交成功！");
+            res.put("data",new JSONObject());
+            return res;
+        }
+    }
+
+
+    // 获取用户信息
+    @RequestMapping("user/info")
+    @ResponseBody
+    public Object getInfo(@RequestHeader("token") String token){
+        System.out.println(token);
+        JSONObject res = new JSONObject();
+        String verifyRes = TokenUtil.verify(token);
+        if (verifyRes.equals("-1")){
+            res.put("code","1");
+            res.put("message","获取登录信息失效，请重新登录！");
+            res.put("data",new JSONObject());
+            return res;
+        }else{
+            res.put("code","0");
+            res.put("message","用户信息已获取！");
+            res.put("data",new JSONObject());
+            JSONObject loginUser = JSON.parseObject(verifyRes);
+            String username = loginUser.getString("username");
+            String[] roleArr = {loginUser.getString("role")};
+            res.put("username",username);
+            res.getJSONObject("data").put("role",roleArr);
             return res;
         }
     }
 }
+
+
