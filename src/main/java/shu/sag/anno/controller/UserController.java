@@ -74,16 +74,21 @@ public class UserController {
         JSONObject res = new JSONObject();
         String verifyRes = TokenUtil.verify(token);
         if (verifyRes.equals("-1")){
-            res.put("code","1");
+            res.put("code",1);
             res.put("message","获取登录信息失效，请重新登录！");
-            res.put("data",new JSONObject());
             return res;
         }else{
             // 获取用户账号
             JSONObject loginUser = JSON.parseObject(verifyRes);
             String username = loginUser.getString("username");
+            System.out.println(username);
             //获取userTask对象
             UserTask ut = userService.getUserTaskByID(userTaskID, username);
+            if(ut==null){
+                res.put("code",1);
+                res.put("message","没有与用户相关的任务");
+                return res;
+            }
             //获取Task对象
             Task task = userService.getTaskByID(ut.getTaskID());
             //判断currentIndex
