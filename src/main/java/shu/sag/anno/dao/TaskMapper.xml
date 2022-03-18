@@ -8,6 +8,18 @@
         insert into task (taskName,tableName,configID,taskStatus,resultTableName) values(#{taskName},#{tableName},#{configID},#{taskStatus},#{resultTableName})
     </insert>
 
+    <select id="getTaskByConfigID" parameterType="int" resultType="Task">
+        select * from task where configID = #{configID}
+    </select>
+
+    <select id="getTaskNum" resultType="int">
+        select count(*) from task
+    </select>
+
+    <select id="getAllTask" resultType="Task">
+        select * from task limit #{currentIndex}, #{pageSize}
+    </select>
+
     <update id="createResultTable" parameterType="String">
         create table if not exists ${resultTableName} (
             id INT(11) NOT NULL AUTO_INCREMENT,
@@ -26,7 +38,14 @@
 
     <update id="updateTask" parameterType="task">
         update task
-        set taskName=#{taskName},tableName=#{tableName},configID=#{configID},taskStatus=#{taskStatus},startIndex=#{startIndex},endIndex=#{endIndex}, resultTableName=#{resultTableName}
+        set taskName=#{taskName},
+            datasetTableName=#{datasetTableName},
+            configID=#{configID},
+            taskStatus=#{taskStatus},
+            startIndex=#{startIndex},
+            endIndex=#{endIndex},
+            resultTableName=#{resultTableName},
+            taskScope = #{taskScope}
         where id = #{id}
     </update>
 
@@ -36,13 +55,9 @@
         where id=#{taskID}
     </update>
 
-    <select id="getAllTask" resultType="Task">
-        select * from task limit #{currentIndex}, #{pageSize}
-    </select>
 
-    <select id="getTaskByConfigID" parameterType="int" resultType="Task">
-        select * from task where configID = #{configID}
-    </select>
+
+
 
     <select id="getTaskByID" parameterType="int" resultType="Task">
         select * from task where id = #{id}

@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Config {
     private int id;
+    private String name;
     private String config;
     private String remark;
 }

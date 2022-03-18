@@ -8,6 +8,18 @@
         insert into config (config, remark) values(#{config},#{remark})
     </insert>
 
+    <select id="getAllConfig" parameterType="int" resultType="Config">
+        select * from config limit #{currentIndex},#{pageSize}
+    </select>
+
+    <select id="getConfigNum" resultType="int">
+        select count(*) from config
+    </select>
+
+
+
+
+
     <delete id="deleteConfig" parameterType="int">
         delete from config where id = #{id}
     </delete>
@@ -20,9 +32,7 @@
         select * from config where config like #{type}
     </select>
 
-    <select id="getAllConfig" parameterType="int" resultType="Config">
-        select * from config limit #{currentIndex},#{pageSize}
-    </select>
+
 
     <update id="updateConfig" parameterType="Config">
         update config

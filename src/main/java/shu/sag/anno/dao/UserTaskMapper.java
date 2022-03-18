@@ -5,6 +5,12 @@ import shu.sag.anno.pojo.UserTask;
 import java.util.List;
 
 public interface UserTaskMapper {
+
+    // 通过taskID获取UserTask
+    List<UserTask> getUserTaskByTaskID(int id);
+
+
+
     //管理员为用户分配任务
     int addUserTask(UserTask userTask);
     //管理员删除用户任务

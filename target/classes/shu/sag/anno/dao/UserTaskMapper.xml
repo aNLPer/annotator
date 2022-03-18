@@ -4,6 +4,15 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="shu.sag.anno.dao.UserTaskMapper">
 
+
+    <select id="getUserTaskByTaskID" resultType="UserTask">
+        select * from usertask where taskID=#{id}
+    </select>
+
+
+
+
+
     <insert id="addUserTask" parameterType="UserTask">
         insert into usertask(userAccount,taskID,taskName,currentIndex)
         values(#{userAccount},#{taskID},#{taskName},#{currentIndex})

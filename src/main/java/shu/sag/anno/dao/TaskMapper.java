@@ -9,6 +9,21 @@ public interface TaskMapper {
     // 增加任务
     int addTask(Task task);
 
+    // 通过configid获取任务
+    List<Task> getTaskByConfigID(int ConfigID);
+
+    // 获取所有的任务
+    List<Task> getAllTask(int currentIndex, int pageSize);
+
+    // 获取task的总数
+    int getTaskNum();
+
+    // 更新任务
+    int updateTask(Task task);
+
+
+
+
     //创建结果集表
     int createResultTable(@Param("resultTableName")String resultTableName);
 
@@ -16,12 +31,7 @@ public interface TaskMapper {
     int deleteTaskByID(int id);
     //通过id获取task对象
     Task getTaskByID(int id);
-    // 通过configid获取任务
-    List<Task> getTaskByConfigID(int ConfigID);
-    // 获取所有的任务
-    List<Task> getAllTask(int currentIndex, int pageSize);
-    // 更新任务
-    int updateTask(Task task);
+
 
     //更新任务状态
     int updateTaskStatus(int taskID, int status);
