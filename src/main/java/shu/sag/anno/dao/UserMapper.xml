@@ -9,9 +9,33 @@
         select * from user where username=#{username} and password=#{password}
     </select>
 
-    <select id="getCurrentAnnoData" resultType="map">
-        select id,text from ${tableName} limit ${currentIndex},1
+    <select id="getUserListByRole">
+        select id,name,username,role,status from user where role=#{role} limit #{currentIndex},#{pageSize}
     </select>
 
+    <select id="getUserNumByRole" parameterType="String">
+        select count(*) from user where role=#{role}
+    </select>
+
+    <delete id="deleteUserByUsername" parameterType="String">
+        delete from user where username=#{username}
+    </delete>
+
+    <update id="updateUserPassword">
+        update user set password=#{password} where username=#{username}
+    </update>
+
+
+    <update id="updateUserStatus">
+        update user set status=#{status} where username=#{username}
+    </update>
+
+    <insert id="addUser" parameterType="User">
+        insert into user(name, username,password,role,status) values (#{name},#{username},#{password},#{role},#{status})
+    </insert>
+
+    <select id="UserisExist">
+        select count(*) from user where username=#{username}
+    </select>
 
 </mapper>

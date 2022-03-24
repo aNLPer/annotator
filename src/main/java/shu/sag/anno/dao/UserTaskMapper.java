@@ -9,14 +9,22 @@ public interface UserTaskMapper {
     // 通过taskID获取UserTask
     List<UserTask> getUserTaskByTaskID(int id);
 
+    //管理员获取有的用户任务
+    List<UserTask> getAllUserTask(int currentIndex, int pageSize);
 
+    // 获取userTask表记录总数
+    int getAllUserTaskNum();
 
     //管理员为用户分配任务
     int addUserTask(UserTask userTask);
+
     //管理员删除用户任务
     int deleteUserTaskByID(int id);
-    //管理员获取有的用户任务
-    List<UserTask> getAllUserTask(int currentIndex, int pageSize);
+
+    // 删除用户相关任务
+    int deleteUserTaskByUsername(String username);
+
+
     //用户获取自己的任务
     List<UserTask> getUserTaskByUserAccount(@Param("username") String username, @Param("currentIndex")int currentIndex, @Param("pageSize")int pageSize);
     // 修改当前标注index

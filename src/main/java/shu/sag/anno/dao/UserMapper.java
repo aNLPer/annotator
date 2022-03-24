@@ -10,8 +10,25 @@ import java.util.Map;
 public interface UserMapper {
     // 用户登录
     User login(@Param("username") String username, @Param("password") String password);
-    //返回当前标注数据
-    Map<String,Object> getCurrentAnnoData(@Param("tableName") String tableName, @Param("currentIndex") int currentIndex);
-    // 添加标注结果
-    int addAnnoResult(AnnoResult annoResult);
+
+    // 获取用户列表
+    List<User> getUserListByRole(int currentIndex, int pageSize, String role);
+
+    // 获取特定类型的用户数量
+    int getUserNumByRole(String role);
+
+    // 删除用户
+    int deleteUserByUsername(String username);
+
+    // 更新用户密码
+    int updateUserPassword(String username, String password);
+
+    // 更新用户状态
+    int updateUserStatus(String username, String statts);
+
+    // 添加用户
+    int addUser(User user);
+
+    // 判断username是否存在
+    int UserisExist(String username);
 }

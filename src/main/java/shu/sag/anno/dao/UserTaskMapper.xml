@@ -9,18 +9,29 @@
         select * from usertask where taskID=#{id}
     </select>
 
+    <select id="getAllUserTask"  resultType="UserTask">
+        select * from usertask where limit #{currentIndex}, #{pageSize}
+    </select>
 
-
-
+    <select id="getAllUserTaskNum"  resultType="int">
+        select count(*) from usertask;
+    </select>
 
     <insert id="addUserTask" parameterType="UserTask">
-        insert into usertask(userAccount,taskID,taskName,currentIndex)
-        values(#{userAccount},#{taskID},#{taskName},#{currentIndex})
+        insert into usertask(username,taskID,taskName,currentAnnoIndex, startAnnoIndex, endAnnoIndex)
+        values(#{username},#{taskID},#{taskName},#{currentAnnoIndex}, #{startAnnoIndex},#{endAnnoIndex})
     </insert>
 
     <delete id="deleteUserTaskByID" parameterType="int">
         delete from usertask where id = #{id}
     </delete>
+
+    <delete id="deleteUserTaskByUsername" parameterType="String">
+        delete from usertask where username = #{username}
+    </delete>
+
+
+
 
     <update id="updateUserTaskCurrentAnnoIndex">
         update usertask

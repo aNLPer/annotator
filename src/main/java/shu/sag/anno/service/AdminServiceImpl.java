@@ -142,18 +142,10 @@ public class AdminServiceImpl implements AdminService {
         }
     }
 
-
-
-
-
-
-
-
     @Override
     public int addUserTask(UserTask userTask) {
         return userTaskMapper.addUserTask(userTask);
     }
-
 
     @Override
     public Config getConfigByID(int id) {
@@ -170,15 +162,10 @@ public class AdminServiceImpl implements AdminService {
         return configMapper.getAllConfig(currentIndex,pageSize);
     }
 
-
-
-
     @Override
     public Task getTaskByID(int id) {
         return taskMapper.getTaskByID(id);
     }
-
-
 
     @Override
     public int deleteUserTaskByID(int id) {
@@ -188,5 +175,10 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public List<UserTask> getAllUserTask(int currentIndex, int pageSize) {
         return userTaskMapper.getAllUserTask(currentIndex, pageSize);
+    }
+
+    @Override
+    public int getAllUserTaskNum(){
+        return userTaskMapper.getAllUserTaskNum();
     }
 }

@@ -28,11 +28,17 @@ public class UserController {
             state.put("message","用户不存在或者密码错误！");
             return state;
         }else{
-            //登录成功返回token
-            state.put("code",0);
-            state.put("message","登录成功！");
-            state.getJSONObject("data").put("token", TokenUtil.sign(user.getUsername(),user.getPassword(),user.getRole()));
-            return state;
+            if (user.getStatus().equals("1")){
+                state.put("code", 1);
+                state.put("message", "登录失败,账户已禁用");
+                return state;
+            }else{
+                //登录成功返回token
+                state.put("code",0);
+                state.put("message","登录成功！");
+                state.getJSONObject("data").put("token", TokenUtil.sign(user.getUsername(),user.getPassword(),user.getRole()));
+                return state;
+            }
         }
     }
 
