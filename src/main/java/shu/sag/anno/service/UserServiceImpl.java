@@ -100,4 +100,16 @@ public class UserServiceImpl implements UserService {
         String fieldName = "text";
         return datasetMapper.getTextFieldFromDataset(datasetTableName, id, fieldName);
     }
+
+    @Override
+    public int UserisExist(String username) {
+        return userMapper.UserisExist(username);
+    }
+
+    @Override
+    public int Regist(User user) {
+        return userMapper.Regist(user);
+    }
+
+
 }

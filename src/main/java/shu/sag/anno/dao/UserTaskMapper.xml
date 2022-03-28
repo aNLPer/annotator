@@ -30,9 +30,6 @@
         delete from usertask where username = #{username}
     </delete>
 
-
-
-
     <update id="updateUserTaskCurrentAnnoIndex">
         update usertask
         set currentAnnoIndex=${currentAnnoIndex}

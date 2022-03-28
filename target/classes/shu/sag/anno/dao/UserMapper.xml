@@ -4,14 +4,42 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="shu.sag.anno.dao.UserMapper">
     <!--这里使用user能代替shu.sag.anno.pojo.User的原因是我们在mybatis.xml文件中为类起了别名-->
+<!--    -->
 
     <select id="login" resultType="user">
         select * from user where username=#{username} and password=#{password}
     </select>
 
-    <select id="getCurrentAnnoData" resultType="map">
-        select id,text from ${tableName} limit ${currentIndex},1
+    <select id="getUserListByRole" resultType="user">
+        select id,name,username,role,status from user where role=#{role} limit #{currentIndex},#{pageSize}
     </select>
 
+    <select id="getUserNumByRole" parameterType="String" resultType="int">
+        select count(*) from user where role=#{role}
+    </select>
+
+    <delete id="deleteUserByUsername" parameterType="String">
+        delete from user where username=#{username}
+    </delete>
+
+    <update id="updateUserPassword">
+        update user set password=#{password} where username=#{username}
+    </update>
+
+    <update id="updateUserStatus">
+        update user set status=#{status} where username=#{username}
+    </update>
+
+    <insert id="addUser" parameterType="User">
+        insert into user(username,role) values (#{username},#{role})
+    </insert>
+
+    <insert id="Regist" parameterType="User">
+        insert into user(name,username,password) values (#{name},#{username},#{password})
+    </insert>
+
+    <select id="UserisExist" resultType="int">
+        select count(*) from user where username=#{username}
+    </select>
 
 </mapper>

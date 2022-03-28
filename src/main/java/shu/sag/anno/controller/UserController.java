@@ -1,5 +1,6 @@
 package shu.sag.anno.controller;
 
+import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonObjectFormatVisitor;
 import org.omg.Messaging.SYNC_WITH_TRANSPORT;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -7,6 +8,8 @@ import org.springframework.web.bind.annotation.*;
 import shu.sag.anno.pojo.*;
 import shu.sag.anno.service.UserService;
 import java.util.List;
+
+import shu.sag.anno.utils.NameGen;
 import shu.sag.anno.utils.TokenUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.JSON;
@@ -16,7 +19,7 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    // 用户登录
+    // 用户登录(已调试)
     @RequestMapping(value = "user/login", method = RequestMethod.POST)
     @ResponseBody
     public Object login(String username, String password){
@@ -42,6 +45,41 @@ public class UserController {
         }
     }
 
+    // 用户注册(已测试)
+    @RequestMapping(value = "user/regist",method = RequestMethod.POST)
+    @ResponseBody
+    public Object regist(User user){
+        JSONObject res = new JSONObject();
+        if(user.getUsername()==null){
+            res.put("code",1);
+            res.put("message","用户账号不能为空");
+            return res;
+        }
+        int userCount = userService.UserisExist(user.getUsername());
+        if (userCount>0){
+            res.put("code",1);
+            res.put("message","该用户已存在");
+            return res;
+        }else{
+            // 用户注册
+            if(user.getName().equals("") || user.getName()==null){
+                // 如果用户名字为空,随机生成
+                user.setName(NameGen.randomName());
+            }
+            int reg = userService.Regist(user);
+            if(reg>0){
+                res.put("code",0);
+                res.put("message","注册成功");
+                return res;
+            }else{
+                res.put("code",1);
+                res.put("message","系统错误，注册失败");
+                return res;
+            }
+
+        }
+    }
+
     // 获取用户标注任务列表（已调试）
     @RequestMapping("user/task/list")
     @ResponseBody
@@ -49,7 +87,7 @@ public class UserController {
         JSONObject res = new JSONObject();
         String verifyRes = TokenUtil.verify(token);
         if (verifyRes.equals("-1")){
-            res.put("code","1");
+            res.put("code",1);
             res.put("message","获取登录信息失效，请重新登录！");
             res.put("data",new JSONObject());
             return res;
@@ -128,7 +166,7 @@ public class UserController {
         }
     }
 
-    // 提交标注结果
+    // 提交标注结果（已调试）
     @RequestMapping(value="user/anno/submit", method = RequestMethod.POST)
     @ResponseBody
     public Object submitAnnoResult(@RequestHeader("token") String token, int userTaskID, int id, String label, String rawTableName, String resultTableName){

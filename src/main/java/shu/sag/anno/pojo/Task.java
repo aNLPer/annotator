@@ -15,4 +15,5 @@ public class Task {
     private int taskStatus;
     private String resultTableName;
     private String taskScope;
+    private String taskType;
 }

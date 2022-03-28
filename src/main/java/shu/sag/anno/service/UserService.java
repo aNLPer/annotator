@@ -34,4 +34,10 @@ public interface UserService {
 
     //获取文本标注
     String getTextByID(String datasetTableName, int id);
+
+    // 判断用户是否存在
+    int UserisExist(String username);
+
+    // 添加用户
+    int Regist(User user);
 }
