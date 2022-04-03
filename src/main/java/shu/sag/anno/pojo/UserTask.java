@@ -15,4 +15,5 @@ public class UserTask {
     private int currentAnnoIndex;
     private int startAnnoIndex;
     private int endAnnoIndex;
+    private String creator;
 }

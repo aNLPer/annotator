@@ -18,8 +18,8 @@
     </select>
 
     <insert id="addUserTask" parameterType="UserTask">
-        insert into usertask(username,taskID,taskName,currentAnnoIndex, startAnnoIndex, endAnnoIndex)
-        values(#{username},#{taskID},#{taskName},#{currentAnnoIndex}, #{startAnnoIndex},#{endAnnoIndex})
+        insert into usertask(username,taskID,taskName,currentAnnoIndex, startAnnoIndex, endAnnoIndex, creator)
+        values(#{username},#{taskID},#{taskName},#{currentAnnoIndex}, #{startAnnoIndex},#{endAnnoIndex}, #{creator})
     </insert>
 
     <delete id="deleteUserTaskByID" parameterType="int">
@@ -52,6 +52,16 @@
 
     <select id="getUserTaskByID" resultType="UserTask">
         select * from usertask where username=#{username} and id=#{id}
+    </select>
+
+    <select id="searchUserTask" resultType="UserTask">
+        select * from usertask
+        where username like '%${username}%' and taskName like '%${taskName}%' limit #{currentIndex},#{pageSize}
+    </select>
+
+    <select id="searchUserTaskResCount" resultType="int">
+        select count(*) from usertask
+        where username like '%${username}%' and taskName like '%${taskName}%'
     </select>
 
 </mapper>

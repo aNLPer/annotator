@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="shu.sag.anno.dao.ApplicationMapper">
+    <insert id="addApplication">
+        insert into application(taskid, username, applytime)
+        values(#{taskid},#{username},#{applytime})
+    </insert>
+
+    <delete id="withdrawApplication">
+        delete from application where id = #{id}
+    </delete>
+
+    <select id="getApplicationByID" resultType="Application">
+        select * from application where id=#{id}
+    </select>
+
+    <select id="getApplicationList" resultType="Application">
+        select * from application where username=#{username} limit #{currentIndex}, #{pageSize}
+    </select>
+
+    <select id="ApplicationCount" resultType="int">
+        select count(*) from application where username=#{username}
+    </select>
+
+    <select id="getApplicationByTaskIDandUsername" resultType="int">
+        select count(*) from application where username=#{username} and taskid=#{taskid}
+    </select>
+
+    <select id="seachApplication" resultType="Application">
+        select * from application where
+        username like '%${username}%' and
+        applystatus like '%${applystatus}%'
+        limit #{currentIndex}, #{pageSize}
+    </select>
+
+    <select id="countSeachedApplication">
+        select count(*) from application where
+        username like '%${username}%' and
+        applystatus like '%${applystatus}%'
+    </select>
+
+    <update id="setApplyStatus">
+        update application
+        set applystatus=#{applystatus}
+        where id=#{id}
+    </update>
+
+</mapper>

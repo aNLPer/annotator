@@ -5,7 +5,7 @@
 <mapper namespace="shu.sag.anno.dao.ConfigMapper">
 
     <insert id="addConfig" parameterType="Config">
-        insert into config (config, remark) values(#{config},#{remark})
+        insert into config (config, remark, name, creator) values(#{config}, #{remark}, #{name}, #{creator})
     </insert>
 
     <select id="getAllConfig" parameterType="int" resultType="Config">
@@ -16,9 +16,11 @@
         select count(*) from config
     </select>
 
-
-
-
+    <update id="updateConfig" parameterType="Config">
+        update config
+        set config = #{config}, remark=#{remark}, name=#{name}
+        where id = #{id}
+    </update>
 
     <delete id="deleteConfig" parameterType="int">
         delete from config where id = #{id}
@@ -32,14 +34,12 @@
         select * from config where config like #{type}
     </select>
 
+    <select id="searchConfig" resultType="Config">
+        select * from config where name like '%${searchValue}%' limit #{currentIndex},#{pageSize}
+    </select>
 
-
-    <update id="updateConfig" parameterType="Config">
-        update config
-        set config = #{config}, remark=#{remark}
-        where id = #{id}
-    </update>
-
-
+    <select id="searchConfigResCount" resultType="int">
+        select count(*) from config where name like '%${searchValue}%'
+    </select>
 
 </mapper>

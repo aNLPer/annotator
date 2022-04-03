@@ -1,5 +1,6 @@
 package shu.sag.anno.service;
 
+import shu.sag.anno.pojo.Task;
 import shu.sag.anno.pojo.User;
 
 import java.util.List;
@@ -21,4 +22,10 @@ public interface SuperAdminService {
     int addUser(User user);
     // 判断用户是否存在
     int UserisExist(String username);
+
+    // 按名字模糊搜索dataset
+    List<User> searchUser(int currentIndex, int pageSize, String searchRole, String searchValue);
+
+    // 按照条件搜索结果的总数
+    int searchUserResCount(String searchRole, String searchValue);
 }

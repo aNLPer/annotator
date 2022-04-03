@@ -10,10 +10,13 @@ import lombok.NoArgsConstructor;
 public class Task {
     private int id;
     private String taskName;
+    private String config;
+    private int datasetID;
     private String datasetTableName;
-    private int configID;
-    private int taskStatus;
     private String resultTableName;
+    private String taskStatus;
     private String taskScope;
-    private String taskType;
+    private int startAnnoIndex;
+    private int endAnnoIndex;
+    private String creator;
 }

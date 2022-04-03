@@ -12,4 +12,5 @@ public class Config {
     private String name;
     private String config;
     private String remark;
+    private String creator;
 }

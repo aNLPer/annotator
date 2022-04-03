@@ -4,15 +4,56 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="shu.sag.anno.dao.DatasetMapper">
 
+    <select id="getAllDataset" resultType="Dataset">
+        select * from dataset limit #{currentIndex}, #{pageSize};
+    </select>
+    
+    <select id="searchDataset" resultType="Dataset">
+        select * from dataset where name like '%${searchValue}%' limit #{currentIndex},#{pageSize}
+    </select>
+    
+    <select id="searchDatasetResCount" resultType="int">
+        select count(*) from dataset where name like '%${searchValue}%'
+    </select>
+
+    <select id="getDatasetByID" resultType="Dataset">
+        select * from dataset where id = #{id}
+    </select>
+
     <select id="getTextFieldFromDataset" resultType="String">
         select ${fieldName} from ${datasetTableName} where id=#{id}
     </select>
 
-    <insert id="addAnnoResult">
-        insert into ${resultTableName} (username, textID, text, label, datasetTableName)
-        values (#{username}, #{textID}, #{text}, #{label}, #{datasetTableName})
+    <select id="countAnnoResult" resultType="int">
+        select count(*) from ${resultTableName} where username=#{username} and textID=#{textID}
+    </select>
+
+    <update id="createDatasetTable">
+        create table if not exists ${datasetTableName} (
+            id INT(11) NOT NULL AUTO_INCREMENT,
+            text mediumtext NOT NULL COMMENT'标注数据',
+            PRIMARY KEY (id)
+        )ENGINE=INNODB DEFAULT CHARSET = utf8mb4;
+    </update>
+
+    <insert id="addItemBatch">
+        insert into ${datasetTableName}(text)
+        values
+        <foreach collection="items" item="item" separator=",">
+            (#{item})
+        </foreach>
     </insert>
 
+    <insert id="addDataset">
+        insert into dataset (name, remark, creator, sampleNums)
+        values (#{name}, #{remark}, #{creator},#{sampleNums})
+    </insert>
 
+    <update id="dropDataset">
+        drop table ${datasetTableName}
+    </update>
 
+    <delete id="deleteDatasetInfo">
+        delete from dataset where id=#{id}
+    </delete>
 </mapper>

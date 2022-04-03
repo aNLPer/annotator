@@ -56,5 +56,15 @@ public class SuperAdminServiceImpl implements SuperAdminService {
         return userMapper.UserisExist(username);
     }
 
+    @Override
+    public List<User> searchUser(int currentIndex, int pageSize, String searchRole, String searchValue) {
+        return userMapper.searchUser(currentIndex, pageSize, searchRole, searchValue);
+    }
+
+    @Override
+    public int searchUserResCount(String searchRole, String searchValue) {
+        return userMapper.searchUserResCount(searchRole, searchValue);
+    }
+
 
 }

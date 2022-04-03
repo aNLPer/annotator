@@ -12,7 +12,7 @@ public interface UserService {
     public Anno getAnno(int currentIndex, Task task);
 
     //提交标注结果返回下一条标注数据
-    boolean addAnnoResult(int userTaskID,
+    int addAnnoResult(int userTaskID,
                       String resultTableName,
                       String username,
                       int textID,
@@ -40,4 +40,35 @@ public interface UserService {
 
     // 添加用户
     int Regist(User user);
+
+    //按名字模糊搜索usertask
+    List<UserTask> searchUserTask(int currentIndex,
+                                  int pageSize,
+                                  String username,
+                                  String searchValue);
+
+    // 按照条件搜索结果的总数
+    int searchUserTaskResCount(String username,
+                               String searchValue);
+
+    //按名字模糊搜索usertask
+    List<Task> searchPubTask(int currentIndex,
+                                  int pageSize,
+                                  String searchValue);
+
+    // 按照条件搜索结果的总数
+    int searchPubTaskResCount(String searchValue);
+
+    // 用户申请任务
+    int addApplication(String username, int taskid);
+
+    // 用户撤回任务申请
+    int withdrawApplication(String username, int id);
+
+    // 获取用户申请列表
+    List<Application> getUserApplications(String uername, int currentIndex, int pageSize);
+
+    // 计算用户申请总数
+    int applicationCount(String username);
+
 }

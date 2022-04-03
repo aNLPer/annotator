@@ -1,6 +1,7 @@
 package shu.sag.anno.dao;
 
 import org.apache.ibatis.annotations.Param;
+import shu.sag.anno.pojo.User;
 import shu.sag.anno.pojo.UserTask;
 import java.util.List;
 
@@ -35,4 +36,16 @@ public interface UserTaskMapper {
     int currentAnnoIndexAdd1(@Param("userTaskID") int userTaskID);
 
     UserTask getUserTaskByID(@Param("id") int id, @Param("username") String username);
+
+    // 模糊搜索usertask
+    List<UserTask> searchUserTask(@Param("currentIndex") int currentIndex,
+                          @Param("pageSize") int pageSize,
+                          @Param("username") String username,
+                          @Param("taskName") String taskName);
+
+    // 模糊搜索结果数TasK目
+    int searchUserTaskResCount(@Param("username") String username,@Param("taskName")String taskName);
+
+
+
 }

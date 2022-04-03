@@ -14,5 +14,7 @@
         <mapper resource="shu/sag/anno/dao/TaskMapper.xml"/>
         <mapper resource="shu/sag/anno/dao/UserTaskMapper.xml"/>
         <mapper resource="shu/sag/anno/dao/UserMapper.xml"/>
+        <mapper resource="shu/sag/anno/dao/DatasetMapper.xml"/>
+        <mapper resource="shu/sag/anno/dao/ApplicationMapper.xml"/>
     </mappers>
 </configuration>

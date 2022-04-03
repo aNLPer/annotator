@@ -42,4 +42,27 @@
         select count(*) from user where username=#{username}
     </select>
 
+    <select id="getUserByUsername" resultType="User" parameterType="String">
+         select id,name,username,role,status from user where username=#{username}
+    </select>
+
+    <select id="searchUser" resultType="User">
+        select id,name,username,role,status from user where role=#{searchRole} and username like '%${searchValue}%' limit #{currentIndex},#{pageSize}
+    </select>
+
+    <select id="searchUserResCount" resultType="int">
+        select count(*) from user where role=#{searchRole} and username like '%${searchValue}%'
+    </select>
+
+    <insert id="addAnnoResult">
+        insert into ${resultTableName} (username, textID, text, label, rawTableName)
+        values (#{username}, #{textID}, #{text}, #{label},#{rawTableName})
+    </insert>
+
+    <update id="updateAnnoResult">
+        update ${resultTableName}
+        set  text=#{text}, label=#{label},
+        where username=#{username} and textID=#{textID}
+    </update>
+
 </mapper>

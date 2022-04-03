@@ -5,7 +5,8 @@
 <mapper namespace="shu.sag.anno.dao.TaskMapper">
 
     <insert id="addTask" parameterType="Task">
-        insert into task (taskName,tableName,configID,taskStatus,resultTableName) values(#{taskName},#{tableName},#{configID},#{taskStatus},#{resultTableName})
+        insert into task (taskName,config,datasetID,datasetTableName,resultTableName,taskScope, startAnnoIndex, endAnnoIndex, creator)
+        values(#{taskName},#{config},#{datasetID},#{datasetTableName},#{resultTableName},#{taskScope},#{startAnnoIndex},#{endAnnoIndex},#{creator})
     </insert>
 
     <select id="getTaskByConfigID" parameterType="int" resultType="Task">
@@ -23,11 +24,11 @@
     <update id="createResultTable" parameterType="String">
         create table if not exists ${resultTableName} (
             id INT(11) NOT NULL AUTO_INCREMENT,
-            userID INT(11) NOT NULL COMMENT'用户id',
+            username INT(11) NOT NULL COMMENT'用户账号',
             textID INT(11) NOT NULL COMMENT'数据id',
             text mediumtext NOT NULL COMMENT'标注数据',
             label text NOT NULL COMMENT'标注',
-            datasetTableName varchar(255) NOT NULL COMMENT'标注数据表',
+            rawTableName varchar(255) NOT NULL COMMENT'标注数据表',
             PRIMARY KEY (id)
         )ENGINE=INNODB DEFAULT CHARSET = utf8mb4;
     </update>
@@ -39,25 +40,18 @@
     <update id="updateTask" parameterType="task">
         update task
         set taskName=#{taskName},
-            datasetTableName=#{datasetTableName},
-            configID=#{configID},
-            taskStatus=#{taskStatus},
-            startIndex=#{startIndex},
-            endIndex=#{endIndex},
-            resultTableName=#{resultTableName},
+            config=#{config},
+            startAnnoIndex=#{startAnnoIndex},
+            endAnnoIndex=#{endAnnoIndex},
             taskScope = #{taskScope}
         where id = #{id}
     </update>
 
-    <update id="updateTaskStatus">
+    <update id="setTaskStatus">
         update task
         set taskStatus=#{status}
         where id=#{taskID}
     </update>
-
-
-
-
 
     <select id="getTaskByID" parameterType="int" resultType="Task">
         select * from task where id = #{id}
@@ -66,4 +60,26 @@
     <select id="getTotalNum" parameterType="int" resultType="int">
         select endAnnoIndex-startAnnoIndex from task where id=#{id}
     </select>
+
+    <select id="searchTask" resultType="Task">
+        select * from task where taskName like '%${searchValue}%' limit ${currentIndex},${pageSize}
+    </select>
+
+    <select id="searchTaskResCount" resultType="int">
+        select count(*) from task where taskName like '%${searchValue}%'
+    </select>
+
+    <select id="searchPubTask" resultType="Task">
+        select * from task where taskScope='1' and taskName like '%${searchValue}%' limit ${currentIndex},${pageSize}
+    </select>
+
+    <select id="searchPubTaskResCount" resultType="int">
+        select count(*) from task where taskScope='1' and taskName like '%${searchValue}%'
+    </select>
+
+    <update id="setScopeByTaskID">
+        update task
+        set taskScope=#{scope}
+        where id=#{taskid}
+    </update>
 </mapper>

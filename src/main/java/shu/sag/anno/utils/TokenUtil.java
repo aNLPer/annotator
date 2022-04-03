@@ -20,7 +20,7 @@ public class TokenUtil {
      * @param **pwd**
      * @return
      */
-    public static String sign(String username, String pwd, String role) {
+    public static String sign(String username, String status, String role) {
         try {
             // 设置过期时间
             Date date = new Date(System.currentTimeMillis() + EXPIRE_TIME);
@@ -34,8 +34,8 @@ public class TokenUtil {
             return JWT.create()
                     .withHeader(header)
                     .withClaim("username", username)
-                    .withClaim("pwd", pwd)
-                    .withClaim("role",role)
+                    .withClaim("role", role)
+                    .withClaim("status",status)
                     .withExpiresAt(date)
                     .sign(algorithm);
         } catch (Exception e) {
@@ -56,7 +56,7 @@ public class TokenUtil {
             JWTVerifier verifier = JWT.require(algorithm).build();
             DecodedJWT jwt = verifier.verify(token);
             UJson.put("username",jwt.getClaim("username").asString());
-            UJson.put("pwd",jwt.getClaim("pwd").asString());
+            UJson.put("status",jwt.getClaim("status").asString());
             UJson.put("role",jwt.getClaim("role").asString());
             return UJson.toJSONString();
         } catch (Exception e){
