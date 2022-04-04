@@ -82,4 +82,8 @@
         set taskScope=#{scope}
         where id=#{taskid}
     </update>
+
+    <select id="getTaskByDatasetID" resultType="int">
+        select count(*) from task where datasetID=#{datasetid}
+    </select>
 </mapper>

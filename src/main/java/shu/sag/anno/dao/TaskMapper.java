@@ -52,4 +52,7 @@ public interface TaskMapper {
 
     public int setScopeByTaskID(@Param("taskid") int taskid, @Param("scope") String scope);
 
+    // 通过数据集id获取任务
+    public int getTaskByDatasetID(@Param("datasetid") int datasetid);
+
 }

@@ -36,5 +36,5 @@ public interface ApplicationMapper {
     int countSeachedApplication(@Param("username")String username,
                                 @Param("applystatus")String applystatus);
 
-    int setApplyStatus(@Param("id") int id, @Param("status") String status);
+    int setApplyStatus(@Param("id") int id, @Param("applystatus") String applystatus);
 }

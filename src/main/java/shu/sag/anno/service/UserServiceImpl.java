@@ -188,7 +188,7 @@ public class UserServiceImpl implements UserService {
     public int withdrawApplication(String username, int id) {
         // 用户申请是否存在
         Application at = applicationMapper.getApplicationByID(id);
-        if(at.getUsername().equals(username)){// 若存在则删除
+        if(at.getUsername().equals(username) && at.getApplystatus().equals("1")){// 若存在而且申请状态为待审核为则删除
             return applicationMapper.withdrawApplication(id);
         }else{
             return 2;

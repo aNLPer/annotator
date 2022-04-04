@@ -11,6 +11,8 @@ public class Application {
     private int id;
     private int taskid;
     private String taskName;
+    private int startAnnoIndex;
+    private int endAnnoIndex;
     private String username;
     private String applytime;
     private String applystatus;

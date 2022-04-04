@@ -481,7 +481,7 @@ public class UserController {
                 int wdRes = userService.withdrawApplication(username,id);
                 if(wdRes == 1){
                     res.put("code",0);
-                    res.put("message","申请撤回！");
+                    res.put("message","申请已撤回！");
                     return res;
                 }else {
                     if(wdRes == 0){
@@ -490,7 +490,7 @@ public class UserController {
                         return res;
                     }else{
                         res.put("code",1);
-                        res.put("message","用户申请不存在！");
+                        res.put("message","用户申请不存在或已审核，无法撤回！");
                         return res;
                     }
                 }

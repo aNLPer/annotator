@@ -110,4 +110,10 @@ public interface AdminService {
 
     // 设置用户申请状态
     int setApplyStatus(int id, String applystatus);
+
+    int setApplyStatus(int id,
+                       String applystatus,
+                       int startAnnoIndex,
+                       int endAnnoIndex,
+                       String username);
 }

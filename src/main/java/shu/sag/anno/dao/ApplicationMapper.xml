@@ -35,7 +35,7 @@
         limit #{currentIndex}, #{pageSize}
     </select>
 
-    <select id="countSeachedApplication">
+    <select id="countSeachedApplication" resultType="int">
         select count(*) from application where
         username like '%${username}%' and
         applystatus like '%${applystatus}%'

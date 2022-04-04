@@ -125,6 +125,11 @@ public class AdminController {
             String status = loginUser.getString("status");
             if (role.trim().equals("1") & status.trim().equals("0")) {// 权限验证通过
                 int delRes = adminService.deleteDataset(id);
+                if(delRes == 2){
+                    res.put("code", 1);
+                    res.put("message", "数据集已分配，无法删除！");
+                    return res;
+                }
                 if(delRes == 0){
                     res.put("code", 0);
                     res.put("message", "删除成功！");
@@ -691,7 +696,7 @@ public class AdminController {
         JSONObject res = new JSONObject();
         String verifyRes = TokenUtil.verify(token);
         if (verifyRes.equals("-1")) {
-            res.put("code", "1");
+            res.put("code", 1);
             res.put("message", "获取登录信息失效，请重新登录！");
             return res;
         } else {
@@ -703,16 +708,16 @@ public class AdminController {
                 // 删除已分配的任务
                 int delRes = adminService.deleteUserTaskByID(id);
                 if (delRes == 1) {
-                    res.put("code", "0");
+                    res.put("code", 0);
                     res.put("message", "删除成功！");
                     return res;
                 } else {
-                    res.put("code", "1");
+                    res.put("code", 1);
                     res.put("message", "删除失败失败！");
                     return res;
                 }
             } else {
-                res.put("code", "1");
+                res.put("code", 1);
                 res.put("message", "没有系统管理员权限！拒绝访问");
                 return res;
             }
@@ -760,6 +765,8 @@ public class AdminController {
                     int taskid = app.getTaskid();
                     Task task = adminService.getTaskByID(taskid);
                     app.setTaskName(task.getTaskName());
+                    app.setStartAnnoIndex(task.getStartAnnoIndex());
+                    app.setEndAnnoIndex(task.getEndAnnoIndex());
                 }
                 int applicationCount = adminService.countSeachedApplication(username, applystatus);
                 res.put("code",0);
@@ -785,12 +792,14 @@ public class AdminController {
     @RequestMapping("admin/applystatus/set")
     @ResponseBody
     public Object setApplystatus(@RequestHeader("token") String token,
-                                  int id,
-                                  String applystatus){
+                                 int id,
+                                 String applystatus,
+                                 int startAnnoIndex,
+                                 int endAnnoIndex){
         JSONObject res = new JSONObject();
         String verifyRes = TokenUtil.verify(token);
         if (verifyRes.equals("-1")) {
-            res.put("code", "1");
+            res.put("code", 1);
             res.put("message", "获取登录信息失效，请重新登录！");
             return res;
         } else {
@@ -798,16 +807,55 @@ public class AdminController {
             // 检查用户权限
             String role = loginUser.getString("role");
             String status = loginUser.getString("status");
+            String username = loginUser.getString("username");
             if (role.trim().equals("1") && status.trim().equals("0")) {
-                int setRes = adminService.setApplyStatus(id,applystatus);
-                if(setRes == 0){
-                    res.put("code", 0);
-                    res.put("message", "更新成功！");
-                    return res;
-                }else{
-                    res.put("code", 1);
-                    res.put("message", "申请不存在，更新失败！");
-                    return res;
+                if(applystatus.equals("0")){// 申请成功
+                    int setRes = adminService.setApplyStatus(id,
+                            applystatus,
+                            startAnnoIndex,
+                            endAnnoIndex,
+                            username);
+                    if(setRes == 3){
+                        res.put("code", 1);
+                        res.put("message", "标注索引不合法！");
+                        return res;
+                    }
+                    if(setRes == 1){
+                        res.put("code", 0);
+                        res.put("message", "更新成功！");
+                        return res;
+                    }else{
+                        if(setRes==0){
+                            res.put("code", 1);
+                            res.put("message", "系统错误，更新失败！");
+                            return res;
+                        }
+                        res.put("code", 1);
+                        res.put("message", "申请不存在，更新失败！");
+                        return res;
+                    }
+                }else{// 申请失败
+                    if(applystatus.equals("2")){
+                        int setRes = adminService.setApplyStatus(id,applystatus);
+                        if(setRes == 1){
+                            res.put("code", 0);
+                            res.put("message", "更新成功！");
+                            return res;
+                        }else{
+                            if(setRes==0){
+                                res.put("code", 1);
+                                res.put("message", "系统错误，更新失败！");
+                                return res;
+                            }
+                            res.put("code", 1);
+                            res.put("message", "申请不存在，更新失败！");
+                            return res;
+                        }
+                    }else{
+                        res.put("code", 1);
+                        res.put("message", "设置申请状态不合法！");
+                        return res;
+                    }
                 }
             } else {
                 res.put("code", 1);
@@ -817,6 +865,4 @@ public class AdminController {
 
         }
     }
-    //
-
 }

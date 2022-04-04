@@ -356,6 +356,12 @@ public class AdminServiceImpl implements AdminService {
     public int deleteDataset(int id) {
         // 获取dataset
         Dataset ds = datasetMapper.getDatasetByID(id);
+        // 判断数据集有没有被分配
+        int datasetid = ds.getId();
+        int tasknums = taskMapper.getTaskByDatasetID(datasetid);
+        if(tasknums>0){
+            return 2;
+        }
         if(ds != null){
             // 删除数据表
             datasetMapper.dropDataset(ds.getName());
@@ -377,16 +383,56 @@ public class AdminServiceImpl implements AdminService {
         return applicationMapper.countSeachedApplication(username, applystatus);
     }
 
+    // 申请状态设置为成功
+    @Override
+    public int setApplyStatus(int id,
+                              String applystatus,
+                              int startAnnoIndex,
+                              int endAnnoIndex,
+                              String creator) {
+        // 判断用户是否存在该申请
+        Application app = applicationMapper.getApplicationByID(id);
+        if(app != null){
+            // 用户存在该申请设置申请状态
+            int setRes = applicationMapper.setApplyStatus(id, applystatus);
+            Task task = taskMapper.getTaskByID(app.getTaskid());
+            // 标注索引合法性判断
+            if(startAnnoIndex >= endAnnoIndex ||
+                    startAnnoIndex < task.getStartAnnoIndex() ||
+                    endAnnoIndex > task.getEndAnnoIndex()){
+                // 标注索引不合法
+                return 3;
+            }
+            // 为用户添加任务
+            UserTask ut = new UserTask();
+            ut.setUsername(app.getUsername());
+            ut.setTaskID(app.getTaskid());
+            ut.setTaskName(task.getTaskName());
+            ut.setCurrentAnnoIndex(startAnnoIndex);
+            ut.setStartAnnoIndex(startAnnoIndex);
+            ut.setEndAnnoIndex(endAnnoIndex);
+            ut.setCreator(creator);
+            int addRes = userTaskMapper.addUserTask(ut);
+            if(addRes>0 && setRes>0){
+                return 1;
+            }else{
+                return 0;
+            }
+        }else{
+            return 2;
+        }
+    }
+
+    // 申请状态设置为失败
     @Override
     public int setApplyStatus(int id, String applystatus) {
         // 判断用户是否存在该申请
         Application app = applicationMapper.getApplicationByID(id);
         if(app != null){
-            // 用户存在该申请
-            applicationMapper.setApplyStatus(id, applystatus);
-            return 0;
+            // 用户存在该申请，则设置申请状态
+            return applicationMapper.setApplyStatus(id, applystatus);
         }else{
-            return 1;
+            return 2;
         }
     }
 
