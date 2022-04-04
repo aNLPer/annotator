@@ -5,8 +5,11 @@ import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
 import shu.sag.anno.pojo.User;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
 
 public class Test {
@@ -22,8 +25,7 @@ public class Test {
 //        String VerEnd = TokenUtil.verify(token);
 //        System.out.println(VerEnd);
 //        System.out.println(TokenUtil.verify(token));
-        String timestr = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:MM"));
-        System.out.println(timestr);
+
     }
 
 

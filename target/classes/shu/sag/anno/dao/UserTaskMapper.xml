@@ -6,7 +6,7 @@
 
 
     <select id="getUserTaskByTaskID" resultType="UserTask">
-        select * from usertask where taskID=#{id}
+        select * from usertask where taskID=#{taskid}
     </select>
 
     <select id="getAllUserTask"  resultType="UserTask">
@@ -52,6 +52,10 @@
 
     <select id="getUserTaskByID" resultType="UserTask">
         select * from usertask where username=#{username} and id=#{id}
+    </select>
+
+    <select id="getUserTaskByID1" resultType="UserTask">
+        select * from usertask where id=#{id}
     </select>
 
     <select id="searchUserTask" resultType="UserTask">

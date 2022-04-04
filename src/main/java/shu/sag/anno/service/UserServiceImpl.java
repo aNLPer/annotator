@@ -5,6 +5,7 @@ import shu.sag.anno.dao.*;
 import shu.sag.anno.pojo.*;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -119,8 +120,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Task getTaskByID(int id){
-        return taskMapper.getTaskByID(id);
+    public Task getTaskByID(int taskid){
+        return taskMapper.getTaskByID(taskid);
     }
 
     @Override
@@ -167,9 +168,10 @@ public class UserServiceImpl implements UserService {
         if(task == null){ // 任务不存在
             return 2;
         }
-        //判断有没有申请过
-        int ApplicationCount = applicationMapper.getApplicationByTaskIDandUsername(username, taskid);
-        if(ApplicationCount>0){
+        //判断有没有该任务的申请在待审核状态
+        Application app = applicationMapper.getApplicationByTaskIDandUsername(username, taskid);
+        if(app != null){
+            // 有该任务在申请待审核状态则无法申请
             return 3;
         }
         Application AT = new Application();
@@ -178,8 +180,9 @@ public class UserServiceImpl implements UserService {
         // 申请人
         AT.setUsername(username);
         //申请时间
-        // String timestr = LocalDate.now().format(DateTimeFormatter.ofPattern("yy-MM-DD HH:MM"));
-        String timestr = "YY-MM-DD";
+        LocalDate d = LocalDate.now(); // 当前日期
+        //LocalTime t = LocalTime.now(); // 当前时间
+        String timestr = d.toString();
         AT.setApplytime(timestr);
         return applicationMapper.addApplication(AT);
     }

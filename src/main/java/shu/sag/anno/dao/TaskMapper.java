@@ -29,9 +29,9 @@ public interface TaskMapper {
 
     // 通过id删除任务
     int deleteTaskByID(int id);
-    //通过id获取task对象
-    Task getTaskByID(int id);
 
+    //通过id获取task对象
+    Task getTaskByID(@Param("taskid") int taskid);
 
     //更新任务状态
     int setTaskStatus(@Param("taskID") int taskID, @Param("status")String status);

@@ -321,7 +321,7 @@ public class AdminServiceImpl implements AdminService {
                     continue;
                 }
                 JSONObject json = JSON.parseObject(line);
-                String item = json.getString("fact");
+                String item = json.getString("text");
                 // 若字段为空则跳过
                 if(item == null){
                     continue;
@@ -413,6 +413,10 @@ public class AdminServiceImpl implements AdminService {
             ut.setEndAnnoIndex(endAnnoIndex);
             ut.setCreator(creator);
             int addRes = userTaskMapper.addUserTask(ut);
+            // 设置任务状态为已分配
+            int taskID = app.getTaskid();
+            String status = "1";
+            taskMapper.setTaskStatus(taskID,status);
             if(addRes>0 && setRes>0){
                 return 1;
             }else{
@@ -438,7 +442,23 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public int deleteUserTaskByID(int id) {
-        return userTaskMapper.deleteUserTaskByID(id);
+        // 当所有的被分派任务被删除后，应该修任务状态为未分配
+        UserTask userTask = userTaskMapper.getUserTaskByID1(id);
+        if(userTask == null){
+            // 任务不存在
+            return 1;
+        }else{
+            userTaskMapper.deleteUserTaskByID(id);
+            // 获取任务被分派出去的数量
+            int taskid = userTask.getTaskID();
+            List<UserTask> userTaskList = userTaskMapper.getUserTaskByTaskID(taskid);
+            if(userTaskList.size()==0){//任务被分派出去的数量为0,则设置为待分配“0”
+                String status = "0";
+                taskMapper.setTaskStatus(taskid,status);
+            }
+            return 0;
+        }
+
     }
 
     @Override

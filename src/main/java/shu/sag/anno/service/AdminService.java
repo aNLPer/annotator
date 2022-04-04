@@ -59,7 +59,7 @@ public interface AdminService {
     Config getConfigByType(String type);
 
     // 通过id获取任务
-    Task getTaskByID(int id);
+    Task getTaskByID(int taskid);
 
     // 按名字模糊搜索config
     List<Config> searchConfig(int currentIndex, int pageSize, String searchValue);

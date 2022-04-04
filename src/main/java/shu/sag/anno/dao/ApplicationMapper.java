@@ -24,7 +24,7 @@ public interface ApplicationMapper {
     int ApplicationCount(@Param("username") String username);
 
     // 根据username和taskid获取application
-    int getApplicationByTaskIDandUsername(@Param("username") String username, @Param("taskid") int taskid);
+    Application getApplicationByTaskIDandUsername(@Param("username") String username, @Param("taskid") int taskid);
 
     // 获取用户申请列表
     List<Application> seachApplication(@Param("currentIndex")int currentIndex,

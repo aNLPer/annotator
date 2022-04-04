@@ -8,7 +8,7 @@ import java.util.List;
 public interface UserTaskMapper {
 
     // 通过taskID获取UserTask
-    List<UserTask> getUserTaskByTaskID(int id);
+    List<UserTask> getUserTaskByTaskID(@Param("taskid") int taskid);
 
     //管理员获取有的用户任务
     List<UserTask> getAllUserTask(int currentIndex, int pageSize);
@@ -36,6 +36,8 @@ public interface UserTaskMapper {
     int currentAnnoIndexAdd1(@Param("userTaskID") int userTaskID);
 
     UserTask getUserTaskByID(@Param("id") int id, @Param("username") String username);
+
+    UserTask getUserTaskByID1(@Param("id") int id);
 
     // 模糊搜索usertask
     List<UserTask> searchUserTask(@Param("currentIndex") int currentIndex,

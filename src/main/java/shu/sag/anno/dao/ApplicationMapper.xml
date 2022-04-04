@@ -24,8 +24,8 @@
         select count(*) from application where username=#{username}
     </select>
 
-    <select id="getApplicationByTaskIDandUsername" resultType="int">
-        select count(*) from application where username=#{username} and taskid=#{taskid}
+    <select id="getApplicationByTaskIDandUsername" resultType="Application">
+        select * from application where username=#{username} and taskid=#{taskid} and applystatus='1'
     </select>
 
     <select id="seachApplication" resultType="Application">

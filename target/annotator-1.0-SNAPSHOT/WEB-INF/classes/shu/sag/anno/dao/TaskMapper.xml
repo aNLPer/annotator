@@ -54,7 +54,7 @@
     </update>
 
     <select id="getTaskByID" parameterType="int" resultType="Task">
-        select * from task where id = #{id}
+        select * from task where id=#{taskid}
     </select>
 
     <select id="getTotalNum" parameterType="int" resultType="int">

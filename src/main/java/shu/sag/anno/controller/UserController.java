@@ -198,11 +198,6 @@ public class UserController {
                 }
                 //获取Task对象
                 Task task = userService.getTaskByID(ut.getTaskID());
-                if (task.getTaskStatus().equals("2")){//如果currentIndex大于标注范围则返回
-                    res.put("code",0);
-                    res.put("message","该任务已标注完成！");
-                    return res;
-                }
                 //判断currentIndex
                 if(currentIndex==-1){//如果currentIndex为-1表示获取下一条标注数据,该情况下Anno对象label值为空
                     currentIndex=ut.getCurrentAnnoIndex();
@@ -379,6 +374,10 @@ public class UserController {
                 for(Application app: applications){
                     int taskid = app.getTaskid();
                     Task task = userService.getTaskByID(taskid);
+                    if(task == null){
+                        app.setTaskName("该任务已删除");
+                        continue;
+                    }
                     app.setTaskName(task.getTaskName());
                 }
                 int applicationCount = userService.applicationCount(username);
@@ -442,7 +441,7 @@ public class UserController {
                             return res;
                         }
                         res.put("code",1);
-                        res.put("message","不能重复申请");
+                        res.put("message","申请待审核中，不能重复申请！");
                         return res;
                     }
                 }

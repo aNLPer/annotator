@@ -707,13 +707,13 @@ public class AdminController {
             if (role.equals("1") & status.trim().equals("0")) {// 权限验证通过
                 // 删除已分配的任务
                 int delRes = adminService.deleteUserTaskByID(id);
-                if (delRes == 1) {
+                if (delRes == 0) {
                     res.put("code", 0);
                     res.put("message", "删除成功！");
                     return res;
                 } else {
                     res.put("code", 1);
-                    res.put("message", "删除失败失败！");
+                    res.put("message", "任务不存在,删除失败！");
                     return res;
                 }
             } else {
@@ -764,6 +764,10 @@ public class AdminController {
                 for(Application app: applications){
                     int taskid = app.getTaskid();
                     Task task = adminService.getTaskByID(taskid);
+                    if(task == null){
+                        app.setTaskName("该任务已删除");
+                        continue;
+                    }
                     app.setTaskName(task.getTaskName());
                     app.setStartAnnoIndex(task.getStartAnnoIndex());
                     app.setEndAnnoIndex(task.getEndAnnoIndex());
