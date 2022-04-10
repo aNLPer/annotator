@@ -76,7 +76,7 @@ public class UserServiceImpl implements UserService {
               （1）验证改用户是否已经提交过条数据的标注，若没有提交过则：插入标注结果，currentIndex应该自增1，
                                                   如果已经提交过则： 更新标注结果，currentIndex保持不变
         * */
-        System.out.println(resultTableName);
+        //System.out.println(resultTableName);
         int annoResultCount = datasetMapper.countAnnoResult(resultTableName,username, textID);
         int addRes = 0;
         int autoAddRes = 0;
@@ -88,7 +88,8 @@ public class UserServiceImpl implements UserService {
             autoAddRes = userTaskMapper.currentAnnoIndexAdd1(userTaskID);
         }else{// 已经标注过
             updateRes = userMapper.updateAnnoResult(resultTableName,username, textID, text, label);
-
+            // 修改userTask当前标注index
+            autoAddRes = userTaskMapper.currentAnnoIndexAdd1(userTaskID);
         }
         if(addRes == 1 &  autoAddRes == 1){// 插入标注结果成功
             //taskMapper.setTaskStatus(userTaskID,"已完成")
@@ -128,8 +129,7 @@ public class UserServiceImpl implements UserService {
     public String getTextByID(String datasetTableName, int id){
         System.out.println(datasetTableName+"__"+id);
         String fieldName = "text";
-//        return datasetMapper.getTextFieldFromDataset(datasetTableName, id, fieldName);
-        return "";
+        return datasetMapper.getTextFieldFromDataset(datasetTableName, id, fieldName);
     }
 
     @Override

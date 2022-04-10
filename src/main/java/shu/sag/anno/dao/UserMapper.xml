@@ -61,7 +61,7 @@
 
     <update id="updateAnnoResult">
         update ${resultTableName}
-        set  text=#{text}, label=#{label},
+        set  text=#{text}, label=#{label}
         where username=#{username} and textID=#{textID}
     </update>
 
