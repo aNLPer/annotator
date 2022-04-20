@@ -4,6 +4,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.web.multipart.MultipartFile;
 import shu.sag.anno.pojo.*;
 
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 
@@ -93,7 +94,7 @@ public interface AdminService {
     int setTaskScope(int taskid, String scope);
 
     // 文件上传
-    int fileUpload(MultipartFile file,String remark, String username)  throws IllegalStateException, IOException;
+    int fileUpload(MultipartFile file, HttpSession session, String remark, String username, String datatype)  throws IllegalStateException, IOException;
 
     // 删除数据库
     int deleteDataset(int id);

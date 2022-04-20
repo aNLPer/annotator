@@ -13,4 +13,5 @@ public class Dataset {
     private String remark;
     private String creator;
     private int sampleNums;
+    private String datatype;
 }

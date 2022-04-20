@@ -45,8 +45,8 @@
     </insert>
 
     <insert id="addDataset">
-        insert into dataset (name, remark, creator, sampleNums)
-        values (#{name}, #{remark}, #{creator},#{sampleNums})
+        insert into dataset (name, remark, creator, sampleNums,datatype)
+        values (#{name}, #{remark}, #{creator},#{sampleNums},#{datatype})
     </insert>
 
     <update id="dropDataset">

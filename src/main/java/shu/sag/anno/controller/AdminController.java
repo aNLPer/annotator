@@ -14,6 +14,7 @@ import shu.sag.anno.utils.JSONUtils;
 import shu.sag.anno.utils.TokenUtil;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.io.*;
 import java.util.List;
 
@@ -30,7 +31,9 @@ public class AdminController {
     @ResponseBody
     public Object testController(@RequestHeader("token") String token,
                                  @Param("file") MultipartFile file,
-                                 @Param("remark") String remark)
+                                 HttpSession session,
+                                 @Param("remark") String remark,
+                                 @Param("datatype") String datatype)
                             throws IllegalStateException, IOException {
         JSONObject res = new JSONObject();
         String verifyRes = TokenUtil.verify(token);
@@ -48,10 +51,15 @@ public class AdminController {
                 // 判断文件是否为空，空则返回失败页面
                 if (file.isEmpty() || file==null) {
                     res.put("code",1);
-                    res.put("message", "无法获取文件内容！");
+                    res.put("message", "文件内容不能为空！");
                     return res;
                 }
-                adminService.fileUpload(file, remark, username);
+                if(!(datatype.equals("文本") || datatype.equals("图片"))){
+                    res.put("code",1);
+                    res.put("message", "数据类型错误!");
+                    return res;
+                }
+                adminService.fileUpload(file, session, remark, username, datatype);
                 res.put("code", 0);
                 res.put("message", "上传成功！");
                 return res;

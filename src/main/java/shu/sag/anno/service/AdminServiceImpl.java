@@ -8,8 +8,8 @@ import org.springframework.web.multipart.MultipartFile;
 import shu.sag.anno.dao.*;
 import shu.sag.anno.pojo.*;
 import shu.sag.anno.utils.JSONUtils;
-
-import javax.xml.crypto.Data;
+import shu.sag.anno.utils.CompressFileUtils;
+import javax.servlet.http.HttpSession;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -303,53 +303,128 @@ public class AdminServiceImpl implements AdminService {
 
 
     @Override
-    public int fileUpload(MultipartFile file, String remark, String username) throws IllegalStateException, IOException{
+    public int fileUpload(MultipartFile file,
+                          HttpSession session,
+                          String remark,
+                          String username,
+                          String datatype) throws IllegalStateException, IOException{
         // 创建数据集表
         String datasetTableName = "dataset_"+UUID.randomUUID().toString().replace('-','_');
         datasetMapper.createDatasetTable(datasetTableName);
-        // 添加数据
-        InputStream inputStream = file.getInputStream();
-        Reader reader = new InputStreamReader(inputStream, "UTF-8");
-        String line = null;
-        // 记录数据总数
-        int count = 0;
-        List<String> items = new ArrayList<>();
-        try(BufferedReader br = new BufferedReader(reader)){
-            while((line = br.readLine())!= null){
-                // 若该行不符合json格式则,跳过
-                if(!JSONUtils.isJson(line)){
-                    continue;
+        if(datatype.equals("文本")){// 上传文本数据
+            // 添加数据
+            InputStream inputStream = file.getInputStream();
+            Reader reader = new InputStreamReader(inputStream, "UTF-8");
+            String line = null;
+            // 记录数据总数
+            int count = 0;
+            List<String> items = new ArrayList<>();
+            try(BufferedReader br = new BufferedReader(reader)){
+                while((line = br.readLine())!= null){
+                    // 若该行不符合json格式则,跳过
+                    if(!JSONUtils.isJson(line)){
+                        continue;
+                    }
+                    JSONObject json = JSON.parseObject(line);
+                    String item = json.getString("text");
+                    // 若字段为空则跳过
+                    if(item == null){
+                        continue;
+                    }
+                    items.add(item);
+                    if(items.size()==2000){
+                        // 每两千条批量添加数据一次
+                        datasetMapper.addItemBatch(datasetTableName, items);
+                        count = count + items.size();
+                        // 清空集合
+                        items.clear();
+                    }
                 }
-                JSONObject json = JSON.parseObject(line);
-                String item = json.getString("text");
-                // 若字段为空则跳过
-                if(item == null){
-                    continue;
-                }
-                items.add(item);
-                if(items.size()==2000){
-                    // 每两千条批量添加数据一次
-                    datasetMapper.addItemBatch(datasetTableName, items);
-                    count = count + items.size();
-                    // 清空集合
-                    items.clear();
-                }
+            }catch (IOException e) {
+                e.printStackTrace();
             }
-        }catch (IOException e) {
-            e.printStackTrace();
+            if(items.size()>0){
+                datasetMapper.addItemBatch(datasetTableName, items);
+                count = count + items.size();
+            }
+            // 记录该数据集表信息
+            Dataset dataset = new Dataset();
+            dataset.setName(datasetTableName);
+            dataset.setRemark(remark);
+            dataset.setCreator(username);
+            dataset.setSampleNums(count);
+            dataset.setDatatype(datatype);
+            datasetMapper.addDataset(dataset);
+            return 0;
+        }else{// 数据类型为图片
+            //获取存储文件的目录
+//            String path = session.getServletContext().getRealPath("/upload");
+            String path = "D:\\anno\\upload";
+            // 上传文件名
+            String fileName = file.getOriginalFilename();
+            // 文件扩展名
+            int pos = fileName.lastIndexOf(".");
+            String extName = fileName.substring(pos+1).toLowerCase();
+
+            // 时间加后缀名保存
+            String saveName = UUID.randomUUID().toString().replace('-','_')+ "."+extName;
+            //文件名
+            String saveFileName = saveName.substring(0, saveName.lastIndexOf("."));
+            // 根据服务器的文件保存地址和原文件名创建目录文件全路径
+            File pushFile = new File(path  + "/" +saveFileName+"/"+ saveName);
+
+            File descFile = new File(path+"/"+saveFileName);
+            if (!descFile.exists()) {
+                descFile.mkdirs();
+            }
+            //解压目的文件
+            String descDir = path +"/"+saveFileName+"/";
+
+            file.transferTo(pushFile);
+            //开始解压zip
+            if (extName.equals("zip")) {
+                String unZipPath = CompressFileUtils.unZipFiles(pushFile, descDir);
+                File dir = new File(unZipPath);
+                File[] files = dir.listFiles();// 该文件目录下文件全部放入数组
+                if (files != null) {
+                    ArrayList<String> items = new ArrayList<>();
+                    int count = 0;
+                    for (int i = 0; i < files.length; i++) {
+                        String fileName_1 = files[i].getName();
+                        String filePath = "http://localhost:8080/img"+unZipPath.replace("D:\\anno\\upload","")+"/"+fileName_1;
+                        items.add(filePath);
+                        if(items.size()==2000){
+                            // 每两千条批量添加数据一次
+                            datasetMapper.addItemBatch(datasetTableName, items);
+                            count = count + items.size();
+                            // 清空集合
+                            items.clear();
+                        }
+                    }
+                    if(items.size()>0){
+                        datasetMapper.addItemBatch(datasetTableName, items);
+                        count = count + items.size();
+                    }
+                    // 记录该数据集表信息
+                    Dataset dataset = new Dataset();
+                    dataset.setName(datasetTableName);
+                    dataset.setRemark(remark);
+                    dataset.setCreator(username);
+                    dataset.setSampleNums(count);
+                    dataset.setDatatype(datatype);
+                    datasetMapper.addDataset(dataset);
+                    return 0;
+                }
+            }else if (extName.equals("rar")) {
+                //开始解压rar
+                CompressFileUtils.unRarFile(pushFile.getAbsolutePath(), descDir);
+            }
+
+            System.out.print(path);
+            return 0;
         }
-        if(items.size()>0){
-            datasetMapper.addItemBatch(datasetTableName, items);
-            count = count + items.size();
-        }
-        // 记录该数据集表信息
-        Dataset dataset = new Dataset();
-        dataset.setName(datasetTableName);
-        dataset.setRemark(remark);
-        dataset.setCreator(username);
-        dataset.setSampleNums(count);
-        datasetMapper.addDataset(dataset);
-        return 0;
+
+
     }
 
     @Override
