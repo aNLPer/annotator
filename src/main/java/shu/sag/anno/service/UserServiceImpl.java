@@ -106,8 +106,16 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserTask> getUserTaskByUserAccount(String username, int currentIndex, int pageSize) {
         // 查询返回结果数据
-        List<UserTask> taskList = userTaskMapper.getUserTaskByUserAccount(username,currentIndex, pageSize);
-        return taskList;
+        List<UserTask> userTaskList = userTaskMapper.getUserTaskByUserAccount(username,currentIndex, pageSize);
+        for(UserTask ut: userTaskList){
+            int taskid = ut.getTaskID();
+            // 获取task的配置项文本
+            String taskconfig = taskMapper.getConfigByTaskID(taskid);
+            ut.setTaskConfig(taskconfig);
+
+
+        }
+        return userTaskList;
     }
 
     @Override

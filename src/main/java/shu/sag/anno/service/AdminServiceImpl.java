@@ -391,7 +391,7 @@ public class AdminServiceImpl implements AdminService {
                     int count = 0;
                     for (int i = 0; i < files.length; i++) {
                         String fileName_1 = files[i].getName();
-                        String filePath = "http://localhost:8080/img"+unZipPath.replace("D:\\anno\\upload","")+"/"+fileName_1;
+                        String filePath = "/img"+unZipPath.replace("D:\\anno\\upload","")+"/"+fileName_1;
                         items.add(filePath);
                         if(items.size()==2000){
                             // 每两千条批量添加数据一次

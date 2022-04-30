@@ -23,6 +23,9 @@ public interface TaskMapper {
     // 更新任务
     int updateTask(Task task);
 
+    // 获取任务的配置项
+    String getConfigByTaskID(int taskid);
+
 
     //创建结果集表
     int createResultTable(@Param("resultTableName")String resultTableName);

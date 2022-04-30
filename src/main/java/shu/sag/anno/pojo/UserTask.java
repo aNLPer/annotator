@@ -16,4 +16,6 @@ public class UserTask {
     private int startAnnoIndex;
     private int endAnnoIndex;
     private String creator;
+    // 配置项文本用于识别标注类型
+    private String taskConfig;
 }

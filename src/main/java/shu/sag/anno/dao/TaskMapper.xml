@@ -65,6 +65,10 @@
         select * from task where taskName like '%${searchValue}%' limit ${currentIndex},${pageSize}
     </select>
 
+    <select id="getConfigByTaskID" resultType="String" parameterType="int">
+        select config from task where id = #{taskid}
+    </select>
+
     <select id="searchTaskResCount" resultType="int">
         select count(*) from task where taskName like '%${searchValue}%'
     </select>
