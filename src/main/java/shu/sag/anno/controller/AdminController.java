@@ -95,8 +95,9 @@ public class AdminController {
                 if(searchValue.equals("")){
                     searchValue = "%";
                 }
-                List<Dataset> datasetList = adminService.searchDataset(currentIndex, pageSize, searchValue);
-                int datasetTotal = adminService.searchDatasetResCount(searchValue);
+                String creator = loginUser.getString("username").trim();
+                List<Dataset> datasetList = adminService.searchDataset(currentIndex, pageSize, creator, searchValue);
+                int datasetTotal = adminService.searchDatasetResCount(creator,searchValue);
                 if (datasetList != null) {
                     res.put("code", 0);
                     res.put("message", "获取" + datasetTotal + "条数据集！");
@@ -226,8 +227,9 @@ public class AdminController {
                 if(searchValue.equals("")){
                     searchValue = "%";
                 }
-                List<Config> configList = adminService.searchConfig(currentIndex, pageSize, searchValue);
-                int configTotal = adminService.searchConfigResCount(searchValue);
+                String creator = loginUser.getString("username").trim();
+                List<Config> configList = adminService.searchConfig(currentIndex, pageSize, creator, searchValue);
+                int configTotal = adminService.searchConfigResCount(creator,searchValue);
                 if (configList != null) {
                     res.put("code", 0);
                     res.put("message", "获取" + configTotal + "条配置项！");
@@ -360,6 +362,7 @@ public class AdminController {
             JSONObject loginUser = JSON.parseObject(verifyRes);
             String role = loginUser.getString("role");
             String status = loginUser.getString("status");
+
             if (role.trim().equals("1") & status.trim().equals("0")) {// 权限验证通过
                 if(searchValue == null){
                     searchValue = "%";
@@ -367,8 +370,9 @@ public class AdminController {
                 if(searchValue.equals("")){
                     searchValue = "%";
                 }
-                List<Task> taskList = adminService.searchTask(currentIndex, pageSize, searchValue);
-                int taskTotal = adminService.searchTaskResCount(searchValue);
+                String creator = loginUser.getString("username").trim();
+                List<Task> taskList = adminService.searchTask(currentIndex, pageSize,creator, searchValue);
+                int taskTotal = adminService.searchTaskResCount(creator,searchValue);
                 if (taskList != null) {
                     res.put("code", 0);
                     res.put("message", "获取" + taskTotal + "条任务！");
@@ -387,7 +391,6 @@ public class AdminController {
             }
         }
     }
-
 
     // 添加任务(已调试)
     @RequestMapping("admin/task/create")
@@ -628,8 +631,9 @@ public class AdminController {
                     taskName = "%";
                 }
                 // 获取分派任务列表
-                List<UserTask> userTaskList = adminService.searchUserTask(currentIndex, pageSize, username, taskName);
-                int userTaskTotal = adminService.searchUserTaskResCount(username, taskName);
+                String creator = loginUser.getString("username").trim();
+                List<UserTask> userTaskList = adminService.searchUserTask(currentIndex, pageSize, creator, username, taskName);
+                int userTaskTotal = adminService.searchUserTaskResCount(creator, username, taskName);
                 if (userTaskList != null) {
                     res.put("code", 0);
                     res.put("message", "获取" + userTaskTotal + "条用户任务项！");
@@ -768,7 +772,9 @@ public class AdminController {
                 if(username.trim().equals("")){
                     applystatus = "%";
                 }
-                List<Application> applications = adminService.seachApplication(currentIndex, pageSize, username, applystatus);
+                // 获取申请列表
+                String creator = loginUser.getString("username").trim();
+                List<Application> applications = adminService.seachApplication(currentIndex, pageSize, creator, username, applystatus);
                 for(Application app: applications){
                     int taskid = app.getTaskid();
                     Task task = adminService.getTaskByID(taskid);
@@ -780,7 +786,7 @@ public class AdminController {
                     app.setStartAnnoIndex(task.getStartAnnoIndex());
                     app.setEndAnnoIndex(task.getEndAnnoIndex());
                 }
-                int applicationCount = adminService.countSeachedApplication(username, applystatus);
+                int applicationCount = adminService.countSeachedApplication(creator,username, applystatus);
                 res.put("code",0);
                 if (applicationCount==0){
                     res.put("message","");

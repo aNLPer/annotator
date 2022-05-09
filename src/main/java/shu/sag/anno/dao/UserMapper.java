@@ -10,6 +10,9 @@ public interface UserMapper {
     // 用户登录
     User login(@Param("username") String username, @Param("password") String password);
 
+    // 获取用户密码
+    String getUserPWD(@Param("username") String username);
+
     // 获取用户列表
     List<User> getUserListByRole(@Param("currentIndex") int currentIndex, @Param("pageSize")int pageSize,  @Param("role")String role);
 
@@ -20,7 +23,7 @@ public interface UserMapper {
     int deleteUserByUsername(String username);
 
     // 更新用户密码
-    int updateUserPassword(@Param("username") String username, @Param("password") String password);
+    int updateUserPassword(@Param("username") String username, @Param("newPWD") String newPWD);
 
     // 更新用户状态
     int updateUserStatus(@Param("username")String username, @Param("status") String status);

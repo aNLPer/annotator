@@ -10,9 +10,13 @@ public interface DatasetMapper {
     // 获取所有的数据集
     List<Dataset>  getAllDataset(@Param("currentIndex") int currentIndex, @Param("pageSize") int pageSize);
     // 模糊搜索dataset
-    List<Dataset> searchDataset(@Param("currentIndex") int currentIndex, @Param("pageSize") int pageSize, @Param("searchValue") String searchValue);
+    List<Dataset> searchDataset(@Param("currentIndex") int currentIndex,
+                                @Param("pageSize") int pageSize,
+                                @Param("creator")String creator,
+                                @Param("searchValue") String searchValue);
     // 模糊搜索结果数目
-    int searchDatasetResCount(String searchValue);
+    int searchDatasetResCount(@Param("creator") String creator,
+                              @Param("searchValue") String searchValue);
     // 通过id获取数据集
     Dataset getDatasetByID(int id);
     // 获取用户标注文本

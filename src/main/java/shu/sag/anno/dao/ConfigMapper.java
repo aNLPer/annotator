@@ -22,8 +22,12 @@ public interface ConfigMapper {
     Config getConfigByType(String type);
 
     // 模糊搜索config
-    List<Config> searchConfig(@Param("currentIndex") int currentIndex, @Param("pageSize") int pageSize, @Param("searchValue") String searchValue);
+    List<Config> searchConfig(@Param("currentIndex") int currentIndex,
+                              @Param("pageSize") int pageSize,
+                              @Param("creator") String creator,
+                              @Param("searchValue") String searchValue);
 
     // 模糊搜索结果数目
-    int searchConfigResCount(String searchValue);
+    int searchConfigResCount(@Param("creator")String creator,
+                             @Param("searchValue") String searchValue);
 }

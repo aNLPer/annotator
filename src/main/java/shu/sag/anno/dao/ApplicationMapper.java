@@ -29,11 +29,13 @@ public interface ApplicationMapper {
     // 获取用户申请列表
     List<Application> seachApplication(@Param("currentIndex")int currentIndex,
                                        @Param("pageSize")int pageSize,
+                                       @Param("creator") String creator,
                                        @Param("username")String username,
                                        @Param("applystatus")String applystatus);
 
     // 用户申请计数
-    int countSeachedApplication(@Param("username")String username,
+    int countSeachedApplication(@Param("creator") String creator,
+                                @Param("username")String username,
                                 @Param("applystatus")String applystatus);
 
     int setApplyStatus(@Param("id") int id, @Param("applystatus") String applystatus);

@@ -62,7 +62,9 @@
     </select>
 
     <select id="searchTask" resultType="Task">
-        select * from task where taskName like '%${searchValue}%' limit ${currentIndex},${pageSize}
+        select * from task
+        where creator=#{creator} and taskName like '%${searchValue}%'
+        limit ${currentIndex},${pageSize}
     </select>
 
     <select id="getConfigByTaskID" resultType="String" parameterType="int">
@@ -70,7 +72,8 @@
     </select>
 
     <select id="searchTaskResCount" resultType="int">
-        select count(*) from task where taskName like '%${searchValue}%'
+        select count(*) from task
+        where creator=#{creator} and taskName like '%${searchValue}%'
     </select>
 
     <select id="searchPubTask" resultType="Task">

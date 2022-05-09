@@ -21,6 +21,7 @@ public class Test {
         String role = "1";
         String token = a.sign(username,status,role);
         System.out.println(token);
+
     }
 
 

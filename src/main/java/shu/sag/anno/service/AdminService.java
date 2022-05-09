@@ -63,31 +63,33 @@ public interface AdminService {
     Task getTaskByID(int taskid);
 
     // 按名字模糊搜索config
-    List<Config> searchConfig(int currentIndex, int pageSize, String searchValue);
+    List<Config> searchConfig(int currentIndex, int pageSize, String creator, String searchValue);
 
     // 按照条件搜索结果的总数
-    int searchConfigResCount(String searchValue);
+    int searchConfigResCount(String creator, String searchValue);
 
     // 按名字模糊搜索dataset
-    List<Dataset> searchDataset(int currentIndex, int pageSize, String searchValue);
+    List<Dataset> searchDataset(int currentIndex, int pageSize, String creator, String searchValue);
 
     // 按照条件搜索结果的总数
-    int searchDatasetResCount(String searchValue);
+    int searchDatasetResCount(String creator, String searchValue);
 
     // 按名字模糊搜索task
-    List<Task> searchTask(int currentIndex, int pageSize, String searchValue);
+    List<Task> searchTask(int currentIndex, int pageSize,String creator, String searchValue);
 
     // 按照条件搜索结果的总数
-    int searchTaskResCount(String searchValue);
+    int searchTaskResCount(String creator, String searchValue);
 
     // 按名字模糊搜索usertask
     List<UserTask> searchUserTask(int currentIndex,
                                   int pageSize,
+                                  String creator,
                                   String username,
                                   String taskName);
 
     // 按照条件搜索结果的总数
-    int searchUserTaskResCount(String username,
+    int searchUserTaskResCount(String creator,
+                               String username,
                                String taskName);
 
     // 设置任务私用/公开属性
@@ -102,11 +104,13 @@ public interface AdminService {
     // 获取用户申请列表
     List<Application> seachApplication(int currentIndex,
                                        int pageSize,
+                                       String creator,
                                        String username,
                                        String applystatus);
 
     // 用户申请计数
-    int countSeachedApplication(String username,
+    int countSeachedApplication(String creator,
+                                String username,
                                 String applystatus);
 
     // 设置用户申请状态

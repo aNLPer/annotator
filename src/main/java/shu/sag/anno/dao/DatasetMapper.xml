@@ -9,11 +9,14 @@
     </select>
     
     <select id="searchDataset" resultType="Dataset">
-        select * from dataset where remark like '%${searchValue}%' limit #{currentIndex},#{pageSize}
+        select * from dataset
+        where creator=#{creator} and remark like '%${searchValue}%'
+        limit #{currentIndex},#{pageSize}
     </select>
     
     <select id="searchDatasetResCount" resultType="int">
-        select count(*) from dataset where remark like '%${searchValue}%'
+        select count(*) from dataset
+        where creator=#{creator} and remark like '%${searchValue}%'
     </select>
 
     <select id="getDatasetByID" resultType="Dataset">

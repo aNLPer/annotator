@@ -257,43 +257,43 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public List<Config> searchConfig(int currentIndex, int pageSize, String searchValue) {
-        return configMapper.searchConfig(currentIndex, pageSize, searchValue);
+    public List<Config> searchConfig(int currentIndex, int pageSize, String creator, String searchValue) {
+        return configMapper.searchConfig(currentIndex, pageSize, creator, searchValue);
     }
 
     @Override
-    public int searchConfigResCount(String searchValue) {
-        return configMapper.searchConfigResCount(searchValue);
+    public int searchConfigResCount(String creator, String searchValue) {
+        return configMapper.searchConfigResCount(creator, searchValue);
     }
 
     @Override
-    public List<Dataset> searchDataset(int currentIndex, int pageSize, String searchVaule) {
-        return datasetMapper.searchDataset(currentIndex, pageSize, searchVaule);
+    public List<Dataset> searchDataset(int currentIndex, int pageSize, String creator, String searchVaule) {
+        return datasetMapper.searchDataset(currentIndex, pageSize, creator, searchVaule);
     }
 
     @Override
-    public int searchDatasetResCount(String searchValue) {
-        return datasetMapper.searchDatasetResCount(searchValue);
+    public int searchDatasetResCount(String creator, String searchValue) {
+        return datasetMapper.searchDatasetResCount(creator, searchValue);
     }
 
     @Override
-    public List<Task> searchTask(int currentIndex, int pageSize, String searchValue) {
-        return taskMapper.searchTask(currentIndex, pageSize, searchValue);
+    public List<Task> searchTask(int currentIndex, int pageSize, String creator, String searchValue) {
+        return taskMapper.searchTask(currentIndex, pageSize, creator, searchValue);
     }
 
     @Override
-    public int searchTaskResCount(String searchValue) {
-        return taskMapper.searchTaskResCount(searchValue);
+    public int searchTaskResCount(String creator, String searchValue) {
+        return taskMapper.searchTaskResCount(creator, searchValue);
     }
 
     @Override
-    public List<UserTask> searchUserTask(int currentIndex, int pageSize, String username, String taskName) {
-        return userTaskMapper.searchUserTask(currentIndex, pageSize, username, taskName);
+    public List<UserTask> searchUserTask(int currentIndex, int pageSize, String creator, String username, String taskName) {
+        return userTaskMapper.searchUserTask(currentIndex, pageSize, creator, username, taskName);
     }
 
     @Override
-    public int searchUserTaskResCount(String username, String taskName) {
-        return userTaskMapper.searchUserTaskResCount(username, taskName);
+    public int searchUserTaskResCount(String creator, String username, String taskName) {
+        return userTaskMapper.searchUserTaskResCount(creator, username, taskName);
     }
 
     @Override
@@ -449,13 +449,13 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public List<Application> seachApplication(int currentIndex, int pageSize, String username, String applystatus) {
-        return applicationMapper.seachApplication(currentIndex, pageSize, username, applystatus);
+    public List<Application> seachApplication(int currentIndex, int pageSize, String creator, String username, String applystatus) {
+        return applicationMapper.seachApplication(currentIndex, pageSize,creator, username, applystatus);
     }
 
     @Override
-    public int countSeachedApplication(String username, String applystatus) {
-        return applicationMapper.countSeachedApplication(username, applystatus);
+    public int countSeachedApplication(String creator, String username, String applystatus) {
+        return applicationMapper.countSeachedApplication(username, creator, applystatus);
     }
 
     // 申请状态设置为成功
@@ -467,17 +467,17 @@ public class AdminServiceImpl implements AdminService {
                               String creator) {
         // 判断用户是否存在该申请
         Application app = applicationMapper.getApplicationByID(id);
-        if(app != null){
-            // 用户存在该申请设置申请状态
-            int setRes = applicationMapper.setApplyStatus(id, applystatus);
-            Task task = taskMapper.getTaskByID(app.getTaskid());
+        if(app != null){// 用户存在该申请
             // 标注索引合法性判断
+            Task task = taskMapper.getTaskByID(app.getTaskid());
             if(startAnnoIndex >= endAnnoIndex ||
                     startAnnoIndex < task.getStartAnnoIndex() ||
                     endAnnoIndex > task.getEndAnnoIndex()){
                 // 标注索引不合法
                 return 3;
             }
+            // 设置申请状态
+            int setRes = applicationMapper.setApplyStatus(id, applystatus);
             // 为用户添加任务
             UserTask ut = new UserTask();
             ut.setUsername(app.getUsername());

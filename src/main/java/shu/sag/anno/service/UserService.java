@@ -23,6 +23,12 @@ public interface UserService {
     //用户获取自己的任务
     List<UserTask> getUserTaskByUserAccount(String username, int currentIndex, int pageSize);
 
+    // 获取用户密码
+    String getUserPWD(String username);
+
+    // 更新用户密码
+    int updateUserPWD(String username, String newPWD);
+
     //用户获取usertask
     UserTask getUserTaskByID(int id, String username);
 

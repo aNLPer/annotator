@@ -42,11 +42,14 @@ public interface UserTaskMapper {
     // 模糊搜索usertask
     List<UserTask> searchUserTask(@Param("currentIndex") int currentIndex,
                           @Param("pageSize") int pageSize,
+                          @Param("creator") String creator,
                           @Param("username") String username,
                           @Param("taskName") String taskName);
 
     // 模糊搜索结果数TasK目
-    int searchUserTaskResCount(@Param("username") String username,@Param("taskName")String taskName);
+    int searchUserTaskResCount(@Param("creator") String creator,
+                               @Param("username") String username,
+                               @Param("taskName")String taskName);
 
 
 

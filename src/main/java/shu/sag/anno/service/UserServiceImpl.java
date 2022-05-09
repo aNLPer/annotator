@@ -119,6 +119,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public String getUserPWD(String username) {
+        return userMapper.getUserPWD(username);
+    }
+
+    @Override
+    public int updateUserPWD(String username, String newPWD) {
+        return userMapper.updateUserPassword(username, newPWD);
+    }
+
+    @Override
     public int getUserTaskNum(String username){
         return userTaskMapper.getUserTaskNum(username);
     }

@@ -41,9 +41,13 @@ public interface TaskMapper {
 
     int getTotalNum(int id);
 
-    List<Task> searchTask(@Param("currentIndex") int currentIndex, @Param("pageSize")int pageSize, @Param("searchValue")String searchValue);
+    List<Task> searchTask(@Param("currentIndex") int currentIndex,
+                          @Param("pageSize")int pageSize,
+                          @Param("creator") String creator,
+                          @Param("searchValue")String searchValue);
 
-    int searchTaskResCount(String searchValue);
+    int searchTaskResCount(@Param("creator") String creator,
+                           @Param("searchValue") String searchValue);
 
     // 搜索公开任务
     public List<Task> searchPubTask(@Param("currentIndex") int currentIndex,

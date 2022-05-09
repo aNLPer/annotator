@@ -35,11 +35,14 @@
     </select>
 
     <select id="searchConfig" resultType="Config">
-        select * from config where name like '%${searchValue}%' limit #{currentIndex},#{pageSize}
+        select * from config
+        where creator=#{creator} and name like '%${searchValue}%'
+        limit #{currentIndex},#{pageSize}
     </select>
 
     <select id="searchConfigResCount" resultType="int">
-        select count(*) from config where name like '%${searchValue}%'
+        select count(*) from config
+        where creator=#{creator} and name like '%${searchValue}%'
     </select>
 
 </mapper>

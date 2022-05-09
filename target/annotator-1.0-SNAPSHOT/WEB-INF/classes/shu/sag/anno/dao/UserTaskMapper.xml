@@ -60,12 +60,13 @@
 
     <select id="searchUserTask" resultType="UserTask">
         select * from usertask
-        where username like '%${username}%' and taskName like '%${taskName}%' limit #{currentIndex},#{pageSize}
+        where creator=#{creator} and username like '%${username}%' and taskName like '%${taskName}%'
+        limit #{currentIndex},#{pageSize}
     </select>
 
     <select id="searchUserTaskResCount" resultType="int">
         select count(*) from usertask
-        where username like '%${username}%' and taskName like '%${taskName}%'
+        where creator=#{creator} and username like '%${username}%' and taskName like '%${taskName}%'
     </select>
 
 </mapper>

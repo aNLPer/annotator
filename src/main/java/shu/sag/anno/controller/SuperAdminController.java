@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import shu.sag.anno.pojo.User;
 import shu.sag.anno.service.SuperAdminService;
 import shu.sag.anno.utils.NameGen;
+import shu.sag.anno.utils.PwdSecurity;
 import shu.sag.anno.utils.TokenUtil;
 
 import java.util.ArrayList;
@@ -89,7 +90,6 @@ public class SuperAdminController {
             if (role.trim().equals("0")) {
                 //删除用户以及与该用户相关的任务
                 int status_1 = superAdminService.deleteUserByUsername(username);
-                System.out.println(status_1);
                 if(status_1>0){
                     // 删除该用户相关的任务
                     superAdminService.deleteUserTaskByUsername(username);
@@ -129,7 +129,7 @@ public class SuperAdminController {
             String role = loginUser.getString("role");
             if (role.trim().equals("0")) {
                 //修改用户密码
-                int status = superAdminService.updateUserPassword(username, password);
+                int status = superAdminService.updateUserPassword(username, PwdSecurity.encode(password.trim()));
                 if (status > 0) {
                     res.put("code", 0);
                     res.put("message", "更新成功！");
@@ -201,50 +201,56 @@ public class SuperAdminController {
         // 检测用户登录状态
         String verifyRes = TokenUtil.verify(token);
         if (verifyRes.equals("-1")) {
-        res.put("code", 1);
-        res.put("message", "获取登录信息失效，请重新登录！");
-        return res;
+            res.put("code", 1);
+            res.put("message", "获取登录信息失效，请重新登录！");
+            return res;
         } else {
-        JSONObject loginUser = JSON.parseObject(verifyRes);
-        // 检查用户权限
-        String role = loginUser.getString("role");
-        if (role.trim().equals("0")) {
-        int count = 0;
-        // 将json字符串转化成为java对象数组
-        List<User> users = null;
+            JSONObject loginUser = JSON.parseObject(verifyRes);
+            // 检查用户权限
+            String role = loginUser.getString("role");
+            if (role.trim().equals("0")) {
+                int count = 0;
+                // 将json字符串转化成为java对象数组
+                List<User> users = null;
         try {
-        users = JSONArray.parseArray(userList, User.class);
+            users = JSONArray.parseArray(userList, User.class);
         }catch (JSONException e){
-        res.put("code",1);
-        res.put("message","用户列表格式出错，系统无法识别！");
-        System.out.println(e.getStackTrace());
-        return res;
+            res.put("code",1);
+            res.put("message","用户列表格式出错，系统无法识别！");
+            System.out.println(e.getStackTrace());
+            return res;
         }
         //添加用户
         for(User user: users){
-        String username = user.getUsername();
-        if(username == null || username.equals("")){
-        count++;
-        continue;
-        }
-        int userCount = superAdminService.UserisExist(username);
-        if (userCount==0 ) {// 若用户不存在
-        if(user.getName()==null || user.getName().equals("")){
-        user.setName(NameGen.randomName());
-        }
-        superAdminService.addUser(user);
-        }else{
-        count ++;
-        }
+            String username = user.getUsername();
+            if(username == null || username.equals("")){
+                count++;
+                continue;
+            }
+            int userCount = superAdminService.UserisExist(username);
+            if (userCount==0 ) {// 若用户不存在
+                if(user.getName()==null || user.getName().trim().equals("")){
+                    user.setName(NameGen.randomName());
+                }
+                // 用户密码加密
+                if(user.getPassword().trim().equals("") || user.getPassword()==null){
+                    user.setPassword(PwdSecurity.encode("123456"));
+                }else{
+                    user.setPassword(PwdSecurity.encode(user.getPassword().trim()));
+                }
+                superAdminService.addUser(user);
+            }else{
+                count ++;
+            }
         }
         res.put("code", 0);
         res.put("message","已执行，有 "+count+" 个用户账号未添加！");
         return res;
         }else{
-        res.put("code", 1);
-        res.put("message", "没有超级管理员权限！拒绝访问");
-        return res;
+            res.put("code", 1);
+            res.put("message", "没有超级管理员权限！拒绝访问");
+            return res;
         }
         }
-        }
+    }
 }

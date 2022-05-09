@@ -29,14 +29,16 @@
     </select>
 
     <select id="seachApplication" resultType="Application">
-        select * from application where
+        select * from application
+        where taskid in (select id from task where creator=#{creator}) and
         username like '%${username}%' and
         applystatus like '%${applystatus}%'
         limit #{currentIndex}, #{pageSize}
     </select>
 
     <select id="countSeachedApplication" resultType="int">
-        select count(*) from application where
+        select count(*) from application
+        where taskid in (select id from task where creator=#{creator}) and
         username like '%${username}%' and
         applystatus like '%${applystatus}%'
     </select>

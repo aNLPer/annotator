@@ -1,14 +1,11 @@
 package shu.sag.anno.controller;
-
-import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonObjectFormatVisitor;
-import org.omg.Messaging.SYNC_WITH_TRANSPORT;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import shu.sag.anno.pojo.*;
 import shu.sag.anno.service.UserService;
 import java.util.List;
-
+import shu.sag.anno.utils.PwdSecurity;
 import shu.sag.anno.utils.JSONUtils;
 import shu.sag.anno.utils.NameGen;
 import shu.sag.anno.utils.TokenUtil;
@@ -26,7 +23,7 @@ public class UserController {
     public Object login(String username, String password){
         JSONObject state = new JSONObject();
         state.put("data",new JSONObject());
-        User user = userService.login(username, password);
+        User user = userService.login(username, PwdSecurity.encode(password.trim()));
         if(user==null){
             state.put("code",1);
             state.put("message","用户不存在或者密码错误！");
@@ -63,10 +60,17 @@ public class UserController {
             return res;
         }else{
             // 用户注册
-            if(user.getName().equals("") || user.getName()==null){
+            if(user.getName().trim().equals("") || user.getName()==null){
                 // 如果用户名字为空,随机生成
                 user.setName(NameGen.randomName());
             }
+            // 用户密码加密
+            if(user.getPassword().trim().equals("") || user.getPassword()==null){
+                user.setPassword(PwdSecurity.encode("123456"));
+            }else{
+                user.setPassword(PwdSecurity.encode(user.getPassword().trim()));
+            }
+            // 用户注册
             int reg = userService.Regist(user);
             if(reg>0){
                 res.put("code",0);
@@ -81,16 +85,50 @@ public class UserController {
         }
     }
 
-    // 获取用户信息(已调试)
-    @RequestMapping("user/info")
+    // 用户修改密码
+    @RequestMapping("user/update/pwd")
     @ResponseBody
-    public Object getInfo(@RequestHeader("token") String token){
+    public Object updatePWD(@RequestHeader("token") String token, String oldPwd, String newPwd){
         JSONObject res = new JSONObject();
         String verifyRes = TokenUtil.verify(token);
         if (verifyRes.equals("-1")){
             res.put("code",1);
             res.put("message","获取登录信息失效，请重新登录！");
-            res.put("data",new JSONObject());
+            return res;
+        }else{
+            JSONObject loginUser = JSON.parseObject(verifyRes);
+            String username = loginUser.getString("username");
+            // 检测旧密码
+            String pwd = userService.getUserPWD(username);
+            if(pwd.equals(PwdSecurity.encode(oldPwd.trim()))){
+                // 修改密码
+                int updateState = userService.updateUserPWD(username, PwdSecurity.encode(newPwd.trim()));
+                if(updateState>0){
+                    res.put("code",0);
+                    res.put("message","修改成功！");
+                    return res;
+                }else{
+                    res.put("code",1);
+                    res.put("message","修改失败！");
+                    return res;
+                }
+            }else{
+                res.put("code",1);
+                res.put("message","旧密码错误！");
+                return res;
+            }
+        }
+    }
+
+    // 获取用户信息(已调试)
+    @RequestMapping("user/info")
+    @ResponseBody
+    public Object getInfo(@RequestHeader("token") String token, String oldPwd, String newPwd){
+        JSONObject res = new JSONObject();
+        String verifyRes = TokenUtil.verify(token);
+        if (verifyRes.equals("-1")){
+            res.put("code",1);
+            res.put("message","获取登录信息失效，请重新登录！");
             return res;
         }else{
             res.put("code",0);
