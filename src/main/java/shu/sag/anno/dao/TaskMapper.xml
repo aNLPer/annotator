@@ -37,6 +37,7 @@
         delete from task where id = #{id}
     </delete>
 
+
     <update id="updateTask" parameterType="task">
         update task
         set taskName=#{taskName},
