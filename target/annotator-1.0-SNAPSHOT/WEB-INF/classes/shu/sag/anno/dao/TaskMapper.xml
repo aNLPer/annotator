@@ -24,7 +24,7 @@
     <update id="createResultTable" parameterType="String">
         create table if not exists ${resultTableName} (
             id INT(11) NOT NULL AUTO_INCREMENT,
-            username INT(11) NOT NULL COMMENT'用户账号',
+            username varchar(255) NOT NULL COMMENT'用户账号',
             textID INT(11) NOT NULL COMMENT'数据id',
             text mediumtext NOT NULL COMMENT'标注数据',
             label text NOT NULL COMMENT'标注',
