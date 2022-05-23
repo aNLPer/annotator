@@ -233,7 +233,7 @@ public class SuperAdminController {
                     user.setName(NameGen.randomName());
                 }
                 // 用户密码加密
-                if(user.getPassword().trim().equals("") || user.getPassword()==null){
+                if(user.getPassword()==null || user.getPassword().trim().equals("") ){
                     user.setPassword(PwdSecurity.encode("123456"));
                 }else{
                     user.setPassword(PwdSecurity.encode(user.getPassword().trim()));

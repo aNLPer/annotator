@@ -251,9 +251,11 @@ public class UserController {
                         Anno anno = userService.getAnno(currentIndex, task);
                         res.getJSONObject("data").put("id",anno.getId());
                         res.getJSONObject("data").put("text",anno.getText());
+                        res.getJSONObject("data").put("taskName",anno.getTaskName());
                         res.getJSONObject("data").put("config",anno.getConfig());
                         res.getJSONObject("data").put("rawTableName",anno.getRawTableName());
                         res.getJSONObject("data").put("resultTableName",anno.getResultTableName());
+                        res.getJSONObject("data").put("taskRemark", anno.getTaskRemark());
                         res.getJSONObject("data").put("label",anno.getLabel());
                         return res;
                     }

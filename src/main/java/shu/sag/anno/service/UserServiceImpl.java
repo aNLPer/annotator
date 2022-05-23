@@ -49,12 +49,16 @@ public class UserServiceImpl implements UserService {
         int id = currentIndex;
         String fieldName = "text";
         anno.setText(datasetMapper.getTextFieldFromDataset(datasetTableName,id,fieldName));
+        // 设置任务名字
+        anno.setTaskName(task.getTaskName());
         //标注结果表
         anno.setResultTableName(task.getResultTableName());
         //原始未标注数据库表名
         anno.setRawTableName(task.getDatasetTableName());
         // 获取标注任务配置项
         anno.setConfig(task.getConfig());
+        // 设置标注任务说明
+        anno.setTaskRemark(task.getRemark());
         // 若已经标注过，设置已标注的标签
         anno.setLabel("");
         //返回

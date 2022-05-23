@@ -5,8 +5,8 @@
 <mapper namespace="shu.sag.anno.dao.TaskMapper">
 
     <insert id="addTask" parameterType="Task">
-        insert into task (taskName,config,datasetID,datasetTableName,resultTableName,taskScope, startAnnoIndex, endAnnoIndex, creator)
-        values(#{taskName},#{config},#{datasetID},#{datasetTableName},#{resultTableName},#{taskScope},#{startAnnoIndex},#{endAnnoIndex},#{creator})
+        insert into task (taskName,config,datasetID,datasetTableName,resultTableName,taskScope, startAnnoIndex, endAnnoIndex, creator, remark)
+        values(#{taskName},#{config},#{datasetID},#{datasetTableName},#{resultTableName},#{taskScope},#{startAnnoIndex},#{endAnnoIndex},#{creator}, #{remark})
     </insert>
 
     <select id="getTaskByConfigID" parameterType="int" resultType="Task">

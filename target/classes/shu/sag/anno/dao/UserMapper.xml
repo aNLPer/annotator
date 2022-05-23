@@ -35,7 +35,7 @@
     </update>
 
     <insert id="addUser" parameterType="User">
-        insert into user(name,username,role) values (#{name},#{username},#{role})
+        insert into user(name,username,password,role) values (#{name},#{username},#{password},#{role})
     </insert>
 
     <insert id="Regist" parameterType="User">

@@ -19,4 +19,5 @@ public class Task {
     private int startAnnoIndex;
     private int endAnnoIndex;
     private String creator;
+    private String remark;
 }
